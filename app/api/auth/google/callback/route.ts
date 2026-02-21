@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
         // 4. Sign JWT and set cookie
         const token = signToken({ userId: user._id.toString(), email: user.email });
 
-        const res = NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/`);
+        const res = NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/account`);
         res.cookies.set('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
