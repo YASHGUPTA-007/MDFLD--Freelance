@@ -29,7 +29,7 @@ export default function RollingFootball({ ballRef }: RollingFootballProps) {
   return (
     <div
       ref={ballRef}
-      className="fixed z-[60] pointer-events-none will-change-transform"
+      className="fixed z-60 pointer-events-none will-change-transform"
       style={{
         // Fallback position (overridden by useEffect above)
         top: '22px',
@@ -43,7 +43,7 @@ export default function RollingFootball({ ballRef }: RollingFootballProps) {
       }}
     >
       {/* Glow halo — subtle at small size, more visible as it grows */}
-      <div className="absolute inset-[-6px] bg-[#00d4b6] rounded-full blur-[16px] opacity-20 animate-pulse" />
+      <div className="absolute inset-[-6px] bg-[#00d4b6] rounded-full blur-lg opacity-20 animate-pulse" />
       {/* Shadow */}
       <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-7 h-1.5 bg-black/50 blur-sm rounded-full" />
       <img

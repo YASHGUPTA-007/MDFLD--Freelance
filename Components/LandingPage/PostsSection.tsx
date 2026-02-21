@@ -36,7 +36,7 @@ export default function PostsSection() {
   ];
 
   return (
-    <section className="py-32 bg-gradient-to-b from-[#050505] via-[#111] to-[#050505] border-y border-white/5 relative overflow-hidden">
+    <section className="py-32 bg-linear-to-b from-[#050505] via-[#111] to-[#050505] border-y border-white/5 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#00d4b6]/5 rounded-full blur-[150px] float-element pointer-events-none"></div>
       <div className="max-w-[1600px] mx-auto px-6 md:px-12 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20 reveal-up">

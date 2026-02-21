@@ -17,10 +17,10 @@ import HorizontalScrollSection from "./HorizontalScrollSection";
 
 import PostsSection from "./PostsSection";
 import NewsletterSection from "./NewsletterSection";
-import FooterSection from "../Footer";
 import GlobalStyles from "./GlobalStyles";
 import Navbar from "../Navbar";
 import ManifestoSection from "./ManifestoSection";
+import FooterSection from "./FooterSection";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);

@@ -2,8 +2,8 @@ import React from 'react';
 import { Sparkles, Zap } from 'lucide-react';
 
 interface HorizontalScrollSectionProps {
-  horizontalSectionRef: React.RefObject<HTMLDivElement>;
-  horizontalTrackRef: React.RefObject<HTMLDivElement>;
+  horizontalSectionRef: React.RefObject<HTMLDivElement | null>;
+  horizontalTrackRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function HorizontalScrollSection({ horizontalSectionRef, horizontalTrackRef }: HorizontalScrollSectionProps) {
