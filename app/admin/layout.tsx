@@ -2,18 +2,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { 
-  LayoutDashboard, 
-  Users, 
-  Package, 
-  ShoppingBag, 
-  Settings, 
-  Menu, 
-  X, 
+import {
+  LayoutDashboard,
+  Users,
+  Package,
+  ShoppingBag,
+  Settings,
+  Menu,
+  X,
   LogOut,
   Shield,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Tag
 } from 'lucide-react';
 
 const ACCENT = '#00d4b6';
@@ -60,6 +61,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
     { icon: Users, label: 'Users', path: '/admin/users' },
+    { icon: Tag, label: 'Categories', path: '/admin/categories' },
     { icon: Package, label: 'Products', path: '/admin/products' },
     { icon: ShoppingBag, label: 'Orders', path: '/admin/orders' },
     { icon: Settings, label: 'Settings', path: '/admin/settings' },
@@ -301,15 +303,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       </aside>
 
       {/* Main Content - Adjusts with sidebar */}
-      <div 
-        style={{ 
-          flex: 1, 
-          display: 'flex', 
-          flexDirection: 'column', 
-          marginLeft: sidebarOpen ? '280px' : '0', 
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          marginLeft: sidebarOpen ? '280px' : '0',
           transition: 'margin-left 0.3s ease',
           minWidth: 0,
-        }} 
+        }}
         className="lg:!ml-0"
       >
         {/* Navbar */}
@@ -334,10 +336,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </header>
 
         {/* Page Content - White Background */}
-        <main style={{ 
-          flex: 1, 
-          padding: '32px', 
-          overflowY: 'auto', 
+        <main style={{
+          flex: 1,
+          padding: '32px',
+          overflowY: 'auto',
           background: '#ffffff',
           transition: 'margin-left 0.3s ease',
         }}>
