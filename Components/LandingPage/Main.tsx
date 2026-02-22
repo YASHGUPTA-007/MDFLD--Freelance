@@ -1,213 +1,88 @@
-"use client";
+"use client"
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
+import { Search, ArrowRight, ShieldCheck, Globe, Zap, Activity, Star, TrendingUp, Package, ChevronRight } from 'lucide-react';
 
-import React, { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import TrustBar from './TrustBar';
+import FeaturedCategories from './FeaturedCategories';
+import ProductGrid from './ProductGrid';
+import PromoBanner from './PromoBanner';
+import Testimonials from './Testimonials';
+import ProAthletes from './ProAtheltes';
+import RecentDrops from './RecentDrops';
+import InstagramFeed from './InstagramFeed';
+import HeroSection from './HeroSection';
 
-// Component imports
-import GrainOverlay from "./GrainOverlay";
-import AmbientOrbs from "./AmbientOrbs";
-import RollingFootball from "./RollingFootball";
+// ─── accent synced to your Navbar's #00d4b6 ───────────────────────────────────
+const ACCENT = '#00d4b6';
+const ACCENT_DIM = 'rgba(0,212,182,0.55)';
+const ACCENT_FAINT = 'rgba(0,212,182,0.07)';
+const ACCENT_BORDER = 'rgba(0,212,182,0.18)';
+const ACCENT_GLOW = 'rgba(0,212,182,0.28)';
 
-import HeroSection from "./HeroSection";
-import MarqueeSection from "./MarqueeSection";
-import BentoGridSection from "./BentoGridSection";
-import HorizontalScrollSection from "./HorizontalScrollSection";
+const PRODUCTS = [
+  {
+    id: 0,
+    tag: 'JUST DROPPED',
+    brand: 'Nike',
+    name: 'Mercurial Superfly 10 Elite',
+    price: '£289',
+    originalPrice: '£349',
+    rating: 4.9,
+    reviews: 2841,
+    img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=90&auto=format&fit=crop',
+    badge: 'Best Seller',
+  },
+  {
+    id: 1,
+    tag: 'LIMITED EDITION',
+    brand: 'Adidas',
+    name: 'Predator Elite ControlSkin',
+    price: '£259',
+    originalPrice: '£319',
+    rating: 4.8,
+    reviews: 1923,
+    img: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&q=90&auto=format&fit=crop',
+    badge: 'Fan Fave',
+  },
+  {
+    id: 2,
+    tag: 'PRO EXCLUSIVE',
+    brand: 'Puma',
+    name: 'Future 7 Ultimate MxSG',
+    price: '£219',
+    originalPrice: '£269',
+    rating: 4.7,
+    reviews: 1102,
+    img: 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=800&q=90&auto=format&fit=crop',
+    badge: 'Pro Pick',
+  },
+];
 
-import PostsSection from "./PostsSection";
-import NewsletterSection from "./NewsletterSection";
-import GlobalStyles from "./GlobalStyles";
-import Navbar from "../Navbar";
-import ManifestoSection from "./ManifestoSection";
-import FooterSection from "./FooterSection";
+const TICKER_ITEMS = [
+  'Blockchain Verified Authentic', '✦',
+  'Free Global Shipping Over £100', '✦',
+  'New Drops Every Friday', '✦',
+  '150+ Countries Shipped', '✦',
+  'Worn By The Pros', '✦',
+  '30-Day Returns', '✦',
+  '5,000+ Products', '✦',
+];
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
-export default function LandingPage() {
-  const mainRef = useRef<HTMLDivElement>(null);
-  const ballRef = useRef<HTMLDivElement>(null);
-  const horizontalSectionRef = useRef<HTMLDivElement>(null);
-  const horizontalTrackRef = useRef<HTMLDivElement>(null);
-  const goalSectionRef = useRef<HTMLElement>(null);
-
-  useGSAP(
-    () => {
-      const goalSection = goalSectionRef.current;
-
-      if (!goalSection || !ballRef.current) return;
-
-      // Master timeline for ball animation
-      const masterTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: mainRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1.5,
-        },
-      });
-
-      // Ball journey animation
-      masterTl
-        .to(ballRef.current, {
-          x: "28vw",
-          y: "18vh",
-          rotation: 300,
-          scale: 1.15,
-          ease: "none",
-          duration: 10,
-        })
-        .to(ballRef.current, {
-          x: "-25vw",
-          y: "35vh",
-          rotation: 600,
-          scale: 0.95,
-          ease: "none",
-          duration: 10,
-        })
-        .to(ballRef.current, {
-          x: "32vw",
-          y: "48vh",
-          rotation: 900,
-          scale: 1.2,
-          ease: "none",
-          duration: 10,
-        })
-        .to(ballRef.current, {
-          x: "-15vw",
-          y: "28vh",
-          rotation: 1180,
-          scale: 1.0,
-          ease: "none",
-          duration: 10,
-        })
-        .to(ballRef.current, {
-          x: "22vw",
-          y: "55vh",
-          rotation: 1440,
-          scale: 0.9,
-          ease: "none",
-          duration: 10,
-        })
-        .to(ballRef.current, {
-          x: "5vw",
-          y: "40vh",
-          rotation: 1680,
-          scale: 1.05,
-          ease: "none",
-          duration: 10,
-        })
-        .to(ballRef.current, {
-          x: "0vw",
-          y: "72vh",
-          rotation: 2160,
-          scale: 0.55,
-          opacity: 0,
-          ease: "power2.in",
-          duration: 15,
-        });
-
-      // Horizontal scroll
-      if (horizontalSectionRef.current && horizontalTrackRef.current) {
-        const getScrollAmount = () => {
-          let trackWidth = horizontalTrackRef.current?.scrollWidth || 0;
-          return -(trackWidth - window.innerWidth);
-        };
-        gsap.to(horizontalTrackRef.current, {
-          x: getScrollAmount,
-          ease: "none",
-          scrollTrigger: {
-            trigger: horizontalSectionRef.current,
-            pin: true,
-            start: "top top",
-            end: () => `+=${getScrollAmount() * -1}`,
-            scrub: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-      }
-
-      // Scroll reveals
-      gsap.utils.toArray(".reveal-up").forEach((elem: any) => {
-        gsap.from(elem, {
-          scrollTrigger: { trigger: elem, start: "top 88%" },
-          y: 70,
-          opacity: 0,
-          duration: 1.2,
-          ease: "power3.out",
-        });
-      });
-
-      // Parallax images
-      gsap.utils.toArray(".parallax-img").forEach((img: any) => {
-        gsap.to(img, {
-          scrollTrigger: {
-            trigger: img.parentElement,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-          y: "20%",
-          ease: "none",
-        });
-      });
-
-      // Floating elements
-      gsap.utils.toArray(".float-element").forEach((elem: any) => {
-        gsap.to(elem, {
-          y: "random(-25, 25)",
-          x: "random(-15, 15)",
-          duration: "random(3, 6)",
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        });
-      });
-
-      // Hero text stagger
-      gsap.from(".hero-word", {
-        y: 120,
-        opacity: 0,
-        duration: 1.4,
-        stagger: 0.12,
-        ease: "power4.out",
-        delay: 0.3,
-      });
-
-      gsap.from(".hero-sub", {
-        y: 40,
-        opacity: 0,
-        duration: 1,
-        delay: 0.9,
-        ease: "power3.out",
-      });
-    },
-    { scope: mainRef },
-  );
-
+export default function App() {
   return (
-    <main
-      ref={mainRef}
-      className="relative bg-[#050505] text-white font-sans selection:bg-[#00d4b6] selection:text-black overflow-x-hidden"
-    >
-      <GrainOverlay />
-      <AmbientOrbs />
-      <RollingFootball ballRef={ballRef} />
-      <Navbar />
+    <div style={{ background: '#020606', minHeight: '100vh' }}>
       <HeroSection />
-      <MarqueeSection />
-      <BentoGridSection />
-      <HorizontalScrollSection
-        horizontalSectionRef={horizontalSectionRef}
-        horizontalTrackRef={horizontalTrackRef}
-      />
-      <ManifestoSection />
-      <PostsSection />
-      <NewsletterSection />
-      <FooterSection goalSectionRef={goalSectionRef} />
-      <GlobalStyles />
-    </main>
+      <TrustBar />
+      <FeaturedCategories />
+      <ProductGrid />
+      <PromoBanner />
+      <ProAthletes />
+      <RecentDrops />
+      <Testimonials />
+      <InstagramFeed />
+  
+    </div>
   );
 }

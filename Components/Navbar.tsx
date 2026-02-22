@@ -210,7 +210,7 @@ export default function Navbar() {
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
           transition: 'all 0.6s cubic-bezier(0.4,0,0.2,1)',
-          padding: scrolled ? '12px 16px' : '0',
+          padding: scrolled ? '12px clamp(12px, 2vw, 16px)' : '0',
         }}
       >
         <div
@@ -220,14 +220,14 @@ export default function Navbar() {
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             transition: 'all 0.6s cubic-bezier(0.4,0,0.2,1)',
             ...(scrolled ? {
-              maxWidth: 1100,
+              maxWidth: '1100px',
               borderRadius: 18,
               border: '1px solid rgba(255,255,255,0.08)',
               background: 'rgba(2,6,6,0.85)',
               backdropFilter: 'blur(24px)',
               WebkitBackdropFilter: 'blur(24px)',
               boxShadow: '0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,182,0.04)',
-              padding: '12px 28px',
+              padding: '12px clamp(16px, 3vw, 28px)',
             } : {
               maxWidth: '100%',
               borderRadius: 0,
@@ -237,7 +237,7 @@ export default function Navbar() {
               backdropFilter: 'blur(8px)',
               WebkitBackdropFilter: 'blur(8px)',
               boxShadow: 'none',
-              padding: '20px 40px',
+              padding: '20px clamp(16px, 4vw, 40px)',
             }),
           }}
         >

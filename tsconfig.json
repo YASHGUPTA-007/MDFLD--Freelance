@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "Components/LandingPage/RecentDrops.tsx", "Components/LandingPage/ProAtheltes.jsx"  ],
   "exclude": ["node_modules"]
 }
