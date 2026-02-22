@@ -58,20 +58,20 @@ async function seedAdmin() {
             role: 'admin',
         });
 
-        console.log('✅ Admin user created successfully!');
-        console.log('📧 Email:', adminEmail);
-        console.log('🔑 Password:', adminPassword);
-        console.log('⚠️  Please change the password after first login!');
-        console.log('\n💡 To use custom credentials, set these in .env.local:');
-        console.log('   ADMIN_EMAIL=your-email@example.com');
-        console.log('   ADMIN_PASSWORD=your-secure-password');
-        console.log('   ADMIN_NAME=Your Name');
+    console.log('✅ Admin user created successfully!');
+    console.log('📧 Email:', adminEmail);
+    console.log('🔑 Password:', adminPassword);
+    console.log('⚠️  Please change the password after first login!');
+    console.log('\n💡 To use custom credentials, set these in .env.local:');
+    console.log('   ADMIN_EMAIL=your-email@example.com');
+    console.log('   ADMIN_PASSWORD=your-secure-password');
+    console.log('   ADMIN_NAME=Your Name');
 
-        process.exit(0);
-    } catch (error) {
-        console.error('❌ Error seeding admin:', error);
-        process.exit(1);
-    }
+    process.exit(0);
+} catch (error) {
+    console.error('❌ Error seeding admin:', error);
+    process.exit(1);
+}
 }
 
 seedAdmin();

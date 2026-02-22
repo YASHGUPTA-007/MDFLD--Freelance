@@ -1,12 +1,14 @@
-import mongoose, { Schema, Document } from 'mongoose';
+// models/User.ts
+
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
     name: string;
     email: string;
-    password?: string;       // optional — Google users won't have this
+    password?: string;
     googleId?: string;
     avatar?: string;
-    role?: 'user' | 'admin'; // Add role field
+    role?: "user" | "admin";
     createdAt: Date;
 }
 
@@ -16,8 +18,9 @@ const UserSchema = new Schema<IUser>({
     password: { type: String },
     googleId: { type: String },
     avatar: { type: String },
-    role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    role: { type: String, enum: ["user", "admin"], default: "user" },
     createdAt: { type: Date, default: Date.now },
 });
 
-export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+export default mongoose.models.User ||
+    mongoose.model<IUser>("User", UserSchema);
