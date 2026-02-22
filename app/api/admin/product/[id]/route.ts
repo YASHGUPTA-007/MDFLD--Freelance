@@ -33,13 +33,13 @@ async function uploadToCloudinary(file: File): Promise<{ url: string; public_id:
     });
 }
 
-export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const payload = await verifyAdmin();
     if (!payload) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     try {
         await connectDB();
-        const product = await Product.findById(params.id).populate('category', 'name').select('-__v');
+        const product = await Product.findById((await params).id).populate('category', 'name').select('-__v');
         if (!product) return NextResponse.json({ error: 'Product not found' }, { status: 404 });
         return NextResponse.json({ product });
     } catch (err) {
@@ -48,13 +48,13 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
     }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const payload = await verifyAdmin();
     if (!payload) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     try {
         await connectDB();
-        const product = await Product.findById(params.id);
+        const product = await Product.findById((await params).id).populate('category', 'name').select('-__v');
         if (!product) return NextResponse.json({ error: 'Product not found' }, { status: 404 });
 
         const formData = await req.formData();
@@ -85,7 +85,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
             update.images = await Promise.all(newImageFiles.map(uploadToCloudinary));
         }
 
-        const updated = await Product.findByIdAndUpdate(params.id, update, { new: true });
+        const updated = await Product.findByIdAndUpdate((await params).id, update, { new: true });
         return NextResponse.json({ product: updated });
     } catch (err) {
         console.error(err);
@@ -93,13 +93,13 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     }
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const payload = await verifyAdmin();
     if (!payload) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     try {
         await connectDB();
-        const product = await Product.findById(params.id);
+        const product = await Product.findById((await params).id);
         if (!product) return NextResponse.json({ error: 'Product not found' }, { status: 404 });
 
         // Delete all images from Cloudinary first
@@ -109,7 +109,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
             )
         );
 
-        await Product.findByIdAndDelete(params.id);
+        await Product.findByIdAndDelete((await params).id);
         return NextResponse.json({ success: true });
     } catch (err) {
         console.error(err);

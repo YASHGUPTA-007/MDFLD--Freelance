@@ -18,7 +18,7 @@ async function verifyAdmin() {
     return verifyToken(token || '');
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const payload = await verifyAdmin();
     if (!payload) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
@@ -33,7 +33,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         }
         if (isActive !== undefined) update.isActive = isActive;
 
-        const category = await Category.findByIdAndUpdate(params.id, update, { new: true });
+        const category = await Category.findByIdAndUpdate((await params).id, update, { new: true });
         if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         return NextResponse.json({ category });
@@ -43,17 +43,17 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     }
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const payload = await verifyAdmin();
     if (!payload) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     try {
         await connectDB();
 
-        const inUse = await Product.exists({ category: params.id });
+        const inUse = await Product.exists({ category: (await params).id });
         if (inUse) return NextResponse.json({ error: 'Category is in use by products' }, { status: 409 });
 
-        const category = await Category.findByIdAndDelete(params.id);
+        const category = await Category.findByIdAndDelete((await params).id);
         if (!category) return NextResponse.json({ error: 'Category not found' }, { status: 404 });
 
         return NextResponse.json({ success: true });

@@ -222,7 +222,7 @@ export default function CategoriesPage() {
             `}</style>
 
             {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, gap: 12, flexWrap: 'wrap' }}>
                 <div>
                     <h1 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 40, fontWeight: 900, color: '#1a1a1a', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
                         Categories
@@ -231,7 +231,7 @@ export default function CategoriesPage() {
                         {categories.length} total
                     </p>
                 </div>
-                <button style={btnPrimary} onClick={() => { setNameInput(''); setShowCreateModal(true); }}>
+                <button style={{ ...btnPrimary, whiteSpace: 'nowrap', flexShrink: 0 }} onClick={() => { setNameInput(''); setShowCreateModal(true); }}>
                     <Plus size={16} /> Add Category
                 </button>
             </div>
