@@ -15,28 +15,29 @@ import { useRouter, usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Users, Package, ShoppingBag,
   Settings, LogOut, Shield, Tag, Activity,
-  Instagram, ChevronLeft, ChevronRight,
+  Instagram, ChevronLeft, ChevronRight, Percent,
 } from 'lucide-react';
 
-const ACCENT   = '#00d4b6';
-const BG_SIDE  = '#080e0e';
-const BG_MAIN  = '#f7f9f9';
+const ACCENT = '#00d4b6';
+const BG_SIDE = '#080e0e';
+const BG_MAIN = '#f7f9f9';
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard',   path: '/admin/dashboard', group: 'main' },
-  { icon: Users,           label: 'Users',        path: '/admin/users',     group: 'main' },
-  { icon: Tag,             label: 'Categories',   path: '/admin/categories',group: 'main' },
-  { icon: Package,         label: 'Products',     path: '/admin/products',  group: 'main' },
-  { icon: ShoppingBag,     label: 'Orders',       path: '/admin/orders',    group: 'main' },
-  { icon: Activity,        label: 'Activity',     path: '/admin/activity',  group: 'analytics' },
-  { icon: Instagram,       label: 'Social Posts', path: '/admin/social-posts', group: 'analytics' },
-  { icon: Settings,        label: 'Settings',     path: '/admin/settings',  group: 'system' },
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard', group: 'main' },
+  { icon: Users, label: 'Users', path: '/admin/users', group: 'main' },
+  { icon: Tag, label: 'Categories', path: '/admin/categories', group: 'main' },
+  { icon: Package, label: 'Products', path: '/admin/products', group: 'main' },
+  { icon: Percent, label: 'Discounts', path: '/admin/discounts', group: 'main' },
+  { icon: ShoppingBag, label: 'Orders', path: '/admin/orders', group: 'main' },
+  { icon: Activity, label: 'Activity', path: '/admin/activity', group: 'analytics' },
+  { icon: Instagram, label: 'Social Posts', path: '/admin/social-posts', group: 'analytics' },
+  { icon: Settings, label: 'Settings', path: '/admin/settings', group: 'system' },
 ];
 
 const groups: Record<string, string> = {
-  main:      'Manage',
+  main: 'Manage',
   analytics: 'Insights',
-  system:    'System',
+  system: 'System',
 };
 
 // ─── Brand Logo Mark ─────────────────────────────────────────────────────────
@@ -86,7 +87,7 @@ function LogoMark({ collapsed }: { collapsed: boolean }) {
             color: 'rgba(255,255,255,0.28)', marginTop: 2,
             whiteSpace: 'nowrap',
           }}>
-            Admin 
+            Admin
           </div>
         </div>
       )}
@@ -294,12 +295,12 @@ function UserFooter({ compact, adminUser, handleLogout }: UserFooterProps) {
 interface AdminLayoutProps { children: React.ReactNode; }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  const [collapsed, setCollapsed]         = useState(false);
-  const [drawerOpen, setDrawerOpen]       = useState(false);
-  const [isMobile, setIsMobile]           = useState(false);
-  const [adminUser, setAdminUser]         = useState<{ name: string; email: string } | null>(null);
-  const [loading, setLoading]             = useState(true);
-  const router   = useRouter();
+  const [collapsed, setCollapsed] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [adminUser, setAdminUser] = useState<{ name: string; email: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
   const pathname = usePathname();
   const isLoginPage = pathname === '/admin/login' || pathname === '/Admin/login';
 
