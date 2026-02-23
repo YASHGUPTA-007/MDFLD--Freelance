@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
         const exists = wishlist.products.map(String).includes(productId);
 
         if (exists) {
-            wishlist.products = wishlist.products.filter((p) => String(p) !== productId);
+            wishlist.products = wishlist.products.filter((p: unknown) => String(p) !== productId);
         } else {
             wishlist.products.push(productId);
         }

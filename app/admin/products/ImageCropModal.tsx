@@ -12,7 +12,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { X, RotateCw, Maximize2, Check, Crop as CropIcon, Loader2 } from 'lucide-react';
 
 const ACCENT = '#00d4b6';
-const DARK   = '#1a1a1a';
+const DARK = '#1a1a1a';
 
 interface Props {
     imageUrl: string;
@@ -22,33 +22,35 @@ interface Props {
 }
 
 const ASPECT_RATIOS = [
-    { label: 'Free', value: null,        desc: 'Any size'  },
-    { label: '16:9', value: 16 / 9,      desc: 'Landscape' },
-    { label: '4:3',  value: 4 / 3,       desc: 'Classic'   },
-    { label: '1:1',  value: 1,           desc: 'Square'    },
-    { label: '3:4',  value: 3 / 4,       desc: 'Portrait'  },
-    { label: '9:16', value: 9 / 16,      desc: 'Story'     },
+    // { label: 'Free', value: null, desc: 'Any size' },
+    // { label: '16:9', value: 16 / 9, desc: 'Landscape' },
+    // { label: '4:3', value: 4 / 3, desc: 'Classic' },
+    { label: '1:1', value: 1, desc: 'Square' },
+    { label: '3:4', value: 3 / 4, desc: 'Portrait' },
+    // { label: '9:16', value: 9 / 16, desc: 'Story' },
 ];
 
 export default function ImageCropModal({ imageUrl, onCropComplete, onCancel, defaultAspectRatio }: Props) {
-    const [crop, setCrop]                   = useState<Crop>({ unit: '%', width: 80, height: 80, x: 10, y: 10 });
+    const [crop, setCrop] = useState<Crop>({ unit: '%', width: 80, height: 80, x: 10, y: 10 });
     const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
-    const [rotation, setRotation]           = useState(0);
-    const [selectedRatio, setSelectedRatio] = useState<number | null>(defaultAspectRatio ?? null);
-    const [isProcessing, setIsProcessing]   = useState(false);
+    const [rotation, setRotation] = useState(0);
+    // const [selectedRatio, setSelectedRatio] = useState<number | null>(defaultAspectRatio ?? null);
+    const [selectedRatio, setSelectedRatio] = useState<number | null>(defaultAspectRatio ?? (3 / 4));
 
-    const imgRef            = useRef<HTMLImageElement>(null);
-    const canvasRef         = useRef<HTMLCanvasElement>(null);
-    const processingRef     = useRef(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    const imgRef = useRef<HTMLImageElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const processingRef = useRef(false);
 
     // Auto-adjust crop when ratio changes
     useEffect(() => {
         if (selectedRatio === null) return;
         const w = 80, h = 80;
         const newCrop: Crop = { unit: '%', width: w, height: h, x: 10, y: 10 };
-        if (selectedRatio > 1)       newCrop.height = w / selectedRatio;
-        else if (selectedRatio < 1)  newCrop.width  = h * selectedRatio;
-        newCrop.x = (100 - newCrop.width)  / 2;
+        if (selectedRatio > 1) newCrop.height = w / selectedRatio;
+        else if (selectedRatio < 1) newCrop.width = h * selectedRatio;
+        newCrop.x = (100 - newCrop.width) / 2;
         newCrop.y = (100 - newCrop.height) / 2;
         setCrop(newCrop);
     }, [selectedRatio]);
@@ -62,26 +64,26 @@ export default function ImageCropModal({ imageUrl, onCropComplete, onCancel, def
 
         requestAnimationFrame(async () => {
             try {
-                const image   = imgRef.current!;
-                const canvas  = canvasRef.current!;
-                const c       = completedCrop;
-                const scaleX  = image.naturalWidth  / image.width;
-                const scaleY  = image.naturalHeight / image.height;
+                const image = imgRef.current!;
+                const canvas = canvasRef.current!;
+                const c = completedCrop;
+                const scaleX = image.naturalWidth / image.width;
+                const scaleY = image.naturalHeight / image.height;
 
                 const ctx = canvas.getContext('2d', { willReadFrequently: false, alpha: false });
                 if (!ctx) throw new Error('No canvas context');
 
-                const dpr          = Math.min(window.devicePixelRatio || 1, 2);
-                const outW         = c.width  * scaleX;
-                const outH         = c.height * scaleY;
-                const MAX          = 3000;
-                const scale        = (outW > MAX || outH > MAX) ? Math.min(MAX / outW, MAX / outH) : 1;
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                const outW = c.width * scaleX;
+                const outH = c.height * scaleY;
+                const MAX = 3000;
+                const scale = (outW > MAX || outH > MAX) ? Math.min(MAX / outW, MAX / outH) : 1;
 
-                canvas.width  = outW * dpr * scale;
+                canvas.width = outW * dpr * scale;
                 canvas.height = outH * dpr * scale;
                 ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
-                ctx.imageSmoothingEnabled  = true;
-                ctx.imageSmoothingQuality  = 'high';
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
 
                 if (rotation !== 0) {
                     ctx.translate(outW / 2, outH / 2);
@@ -112,9 +114,9 @@ export default function ImageCropModal({ imageUrl, onCropComplete, onCancel, def
     const handleFitImage = () => {
         const newCrop: Crop = { unit: '%', width: 90, height: 90, x: 5, y: 5 };
         if (selectedRatio !== null) {
-            if (selectedRatio > 1)      newCrop.height = newCrop.width  / selectedRatio;
-            else if (selectedRatio < 1) newCrop.width  = newCrop.height * selectedRatio;
-            newCrop.x = (100 - newCrop.width)  / 2;
+            if (selectedRatio > 1) newCrop.height = newCrop.width / selectedRatio;
+            else if (selectedRatio < 1) newCrop.width = newCrop.height * selectedRatio;
+            newCrop.x = (100 - newCrop.width) / 2;
             newCrop.y = (100 - newCrop.height) / 2;
         }
         setCrop(newCrop);
@@ -284,7 +286,7 @@ export default function ImageCropModal({ imageUrl, onCropComplete, onCancel, def
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                                 {[
                                     { icon: <RotateCw size={15} />, label: 'Rotate 90°', action: () => setRotation(p => (p + 90) % 360) },
-                                    { icon: <Maximize2 size={15} />, label: 'Fit to View',  action: handleFitImage },
+                                    { icon: <Maximize2 size={15} />, label: 'Fit to View', action: handleFitImage },
                                 ].map(t => (
                                     <button key={t.label} onClick={t.action} disabled={isProcessing} style={{
                                         width: '100%', padding: '10px 14px',
@@ -314,7 +316,7 @@ export default function ImageCropModal({ imageUrl, onCropComplete, onCancel, def
                             }}>
                                 {[
                                     ['Crop Size', completedCrop ? `${Math.round(completedCrop.width)} × ${Math.round(completedCrop.height)}px` : '—'],
-                                    ['Rotation',  `${rotation}°`],
+                                    ['Rotation', `${rotation}°`],
                                     ...(selectedRatio !== null ? [['Ratio', ASPECT_RATIOS.find(r => r.value === selectedRatio)?.label ?? '']] : []),
                                 ].map(([k, v]) => (
                                     <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
