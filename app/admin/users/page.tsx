@@ -210,6 +210,8 @@ export default function UsersPage() {
   const [submitting, setSubmitting] = useState(false);
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const searchWrapRef = useRef<HTMLDivElement>(null);
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [confirmModal, setConfirmModal] = useState<ConfirmModal | null>(null);
   const [toast, setToast] = useState<Toast | null>(null);
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -291,6 +293,15 @@ export default function UsersPage() {
     }
   };
 
+  useEffect(() => {
+    const h = (e: MouseEvent) => {
+      if (searchWrapRef.current && !searchWrapRef.current.contains(e.target as Node))
+        setSuggestionsOpen(false);
+    };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+
   return (
     <div>
       <style>{`
@@ -312,7 +323,7 @@ export default function UsersPage() {
         </div>
 
         {/* Search */}
-        <div style={{ position: 'relative', width: 260 }}>
+        {/* <div style={{ position: 'relative', width: 260 }}>
           <Search size={14} style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', color: '#aaa', pointerEvents: 'none' }} />
           <input
             type="text"
@@ -326,6 +337,54 @@ export default function UsersPage() {
               outline: 'none', background: '#fafafa',
             }}
           />
+        </div> */}
+        <div ref={searchWrapRef} style={{ position: 'relative', width: 280 }}>
+          <Search size={14} style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', color: '#aaa', pointerEvents: 'none' }} />
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={searchInput}
+            onChange={e => { handleSearchInput(e.target.value); setSuggestionsOpen(e.target.value.trim().length > 0); }}
+            onFocus={() => searchInput.trim().length > 0 && setSuggestionsOpen(true)}
+            onKeyDown={e => e.key === 'Escape' && setSuggestionsOpen(false)}
+            style={{ width: '100%', padding: '8px 12px 8px 32px', border: '1px solid #e5e5e5', borderRadius: 7, fontFamily: "'Barlow', sans-serif", fontSize: 12, color: '#1a1a1a', outline: 'none', background: '#fafafa' }}
+          />
+          {suggestionsOpen && users.filter(u => u.name.toLowerCase().includes(searchInput.toLowerCase()) || u.email.toLowerCase().includes(searchInput.toLowerCase())).length > 0 && (
+            <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0, zIndex: 200, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 10, boxShadow: '0 8px 32px rgba(0,0,0,0.10)', overflow: 'hidden' }}>
+              {users
+                .filter(u => u.name.toLowerCase().includes(searchInput.toLowerCase()) || u.email.toLowerCase().includes(searchInput.toLowerCase()))
+                .slice(0, 6)
+                .map(u => {
+                  const idx = u.name.toLowerCase().indexOf(searchInput.toLowerCase());
+                  return (
+                    <button
+                      key={u._id}
+                      onMouseDown={() => { handleSearchInput(u.name); setSuggestionsOpen(false); }}
+                      style={{ width: '100%', padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', borderBottom: '1px solid #f5f5f5', cursor: 'pointer', textAlign: 'left', fontFamily: "'Barlow', sans-serif", fontSize: 13, color: '#333' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = '#f9fffe')}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                    >
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13 }}>
+                          {idx === -1 ? u.name : (
+                            <>
+                              {u.name.slice(0, idx)}
+                              <strong style={{ color: ACCENT }}>{u.name.slice(idx, idx + searchInput.length)}</strong>
+                              {u.name.slice(idx + searchInput.length)}
+                            </>
+                          )}
+                        </div>
+                        <div style={{ fontSize: 11, color: '#aaa', marginTop: 1 }}>{u.email}</div>
+                      </div>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: (u.role ?? 'user') === 'admin' ? '#6366f1' : '#aaa', background: (u.role ?? 'user') === 'admin' ? 'rgba(99,102,241,0.1)' : '#f5f5f5', padding: '2px 7px', borderRadius: 8, flexShrink: 0 }}>
+                        {(u.role ?? 'user').toUpperCase()}
+                      </span>
+                    </button>
+                  );
+                })
+              }
+            </div>
+          )}
         </div>
       </div>
 

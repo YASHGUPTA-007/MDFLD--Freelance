@@ -149,7 +149,7 @@ function ProductFormPanel({ editTarget, categories, onClose, onSuccess, showToas
     onSuccess: () => void;
     showToast: (msg: string, type: 'success' | 'error') => void;
 }) {
-    const [form, setForm]           = useState<FormState>(EMPTY_FORM);
+    const [form, setForm] = useState<FormState>(EMPTY_FORM);
     const [pickerValue, setPickerValue] = useState<ImagePickerValue>({ files: [], featuredIndex: 0, existingUrls: [] });
     const [submitting, setSubmitting] = useState(false);
 
@@ -157,20 +157,20 @@ function ProductFormPanel({ editTarget, categories, onClose, onSuccess, showToas
     useEffect(() => {
         if (editTarget) {
             setForm({
-                title:          editTarget.title,
-                description:    '',
-                price:          String(editTarget.price),
+                title: editTarget.title,
+                description: '',
+                price: String(editTarget.price),
                 compareAtPrice: String(editTarget.compareAtPrice || ''),
-                categoryId:     editTarget.category?._id || '',
-                brand:          editTarget.brand || '',
-                team:           editTarget.team  || '',
-                condition:      editTarget.condition,
-                stock:          String(editTarget.stock),
+                categoryId: editTarget.category?._id || '',
+                brand: editTarget.brand || '',
+                team: editTarget.team || '',
+                condition: editTarget.condition,
+                stock: String(editTarget.stock),
             });
             setPickerValue({
                 files: [],
                 featuredIndex: editTarget.featuredImageIndex ?? 0,
-                existingUrls:  editTarget.images.map(i => i.url),
+                existingUrls: editTarget.images.map(i => i.url),
             });
         } else {
             setForm(EMPTY_FORM);
@@ -192,10 +192,10 @@ function ProductFormPanel({ editTarget, categories, onClose, onSuccess, showToas
             pickerValue.files.forEach(f => fd.append('images', f));
             fd.append('featuredImageIndex', String(pickerValue.featuredIndex));
 
-            const url    = editTarget ? `/api/admin/product/${editTarget._id}` : '/api/admin/product';
+            const url = editTarget ? `/api/admin/product/${editTarget._id}` : '/api/admin/product';
             const method = editTarget ? 'PUT' : 'POST';
 
-            const res  = await fetch(url, { method, body: fd });
+            const res = await fetch(url, { method, body: fd });
             const data = await res.json();
             if (!res.ok) return showToast(data.error || 'Failed to save product', 'error');
 
@@ -218,6 +218,7 @@ function ProductFormPanel({ editTarget, categories, onClose, onSuccess, showToas
                 placeholder={placeholder}
                 value={form[key]}
                 onChange={e => setForm(p => ({ ...p, [key]: e.target.value }))}
+                onWheel={e => e.currentTarget.blur()}
             />
         </div>
     );
@@ -316,25 +317,27 @@ function ProductFormPanel({ editTarget, categories, onClose, onSuccess, showToas
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function ProductsPage() {
-    const [products,   setProducts]   = useState<Product[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
-    const [stats,      setStats]      = useState<Stats>({ total: 0, active: 0, inactive: 0, lowStock: 0 });
+    const [stats, setStats] = useState<Stats>({ total: 0, active: 0, inactive: 0, lowStock: 0 });
     const [pagination, setPagination] = useState<Pagination>({ total: 0, page: 1, limit: 30, totalPages: 1 });
 
-    const [loading,   setLoading]   = useState(true);
-    const [submitting,setSubmitting]= useState(false);
+    const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
 
     // Filters
-    const [searchInput,  setSearchInput]  = useState('');
-    const [search,       setSearch]       = useState('');
-    const [filterCat,    setFilterCat]    = useState('');
+    const [searchInput, setSearchInput] = useState('');
+    const [search, setSearch] = useState('');
+    const searchWrapRef = useRef<HTMLDivElement>(null);
+    const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+    const [filterCat, setFilterCat] = useState('');
     const [filterStatus, setFilterStatus] = useState('');
 
     // Modals
-    const [showForm,     setShowForm]     = useState(false);
-    const [editTarget,   setEditTarget]   = useState<Product | null>(null);
+    const [showForm, setShowForm] = useState(false);
+    const [editTarget, setEditTarget] = useState<Product | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
-    const [toast,        setToast]        = useState<Toast | null>(null);
+    const [toast, setToast] = useState<Toast | null>(null);
 
     const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -345,13 +348,13 @@ export default function ProductsPage() {
         setLoading(true);
         try {
             const params = new URLSearchParams({ page: String(page) });
-            if (s)      params.set('search',   s);
-            if (cat)    params.set('category', cat);
-            if (status) params.set('status',   status);
+            if (s) params.set('search', s);
+            if (cat) params.set('category', cat);
+            if (status) params.set('status', status);
 
-            const res  = await fetch(`/api/admin/product?${params}`);
+            const res = await fetch(`/api/admin/product?${params}`);
             const data = await res.json();
-            setProducts(data.products   || []);
+            setProducts(data.products || []);
             setPagination(data.pagination);
             if (data.stats) setStats(data.stats);
         } catch {
@@ -369,6 +372,15 @@ export default function ProductsPage() {
     }, []);
 
     useEffect(() => { fetchProducts(1); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        const h = (e: MouseEvent) => {
+            if (searchWrapRef.current && !searchWrapRef.current.contains(e.target as Node))
+                setSuggestionsOpen(false);
+        };
+        document.addEventListener('mousedown', h);
+        return () => document.removeEventListener('mousedown', h);
+    }, []);
 
     // Debounced search
     const handleSearchInput = (val: string) => {
@@ -409,7 +421,7 @@ export default function ProductsPage() {
         if (!deleteTarget) return;
         setSubmitting(true);
         try {
-            const res  = await fetch(`/api/admin/product/${deleteTarget._id}`, { method: 'DELETE' });
+            const res = await fetch(`/api/admin/product/${deleteTarget._id}`, { method: 'DELETE' });
             const data = await res.json();
             if (!res.ok) return showToast(data.error || 'Failed to delete', 'error');
             showToast('Product deleted', 'success');
@@ -441,26 +453,56 @@ export default function ProductsPage() {
 
             {/* ── 1. Stat Cards ─────────────────────────────────────────────── */}
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 28 }}>
-                <StatCard icon={<Package size={22} />}       label="Total Products" value={stats.total}    color="#6366f1" />
-                <StatCard icon={<CheckCircle size={22} />}   label="Active"         value={stats.active}   color={ACCENT} />
-                <StatCard icon={<XCircle size={22} />}       label="Inactive"       value={stats.inactive} color="#ff6b6b" />
+                <StatCard icon={<Package size={22} />} label="Total Products" value={stats.total} color="#6366f1" />
+                <StatCard icon={<CheckCircle size={22} />} label="Active" value={stats.active} color={ACCENT} />
+                <StatCard icon={<XCircle size={22} />} label="Inactive" value={stats.inactive} color="#ff6b6b" />
                 <StatCard icon={<AlertTriangle size={22} />} label="Low Stock (≤5)" value={stats.lowStock} color="#f59e0b" />
             </div>
 
             {/* ── 2. Search / Filter / Add button ───────────────────────────── */}
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', marginBottom: 20 }}>
                 {/* Search */}
-                <div style={{ position: 'relative', flex: '1 1 220px', maxWidth: 360 }}>
-                    <Search size={15} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#aaa' }} />
+                <div ref={searchWrapRef} style={{ position: 'relative', flex: '1 1 220px', maxWidth: 360 }}>
+                    <Search size={15} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#aaa', pointerEvents: 'none' }} />
                     <input
                         type="text"
                         placeholder="Search products..."
                         value={searchInput}
-                        onChange={e => handleSearchInput(e.target.value)}
+                        onChange={e => { handleSearchInput(e.target.value); setSuggestionsOpen(e.target.value.trim().length > 0); }}
+                        onFocus={() => searchInput.trim().length > 0 && setSuggestionsOpen(true)}
+                        onKeyDown={e => e.key === 'Escape' && setSuggestionsOpen(false)}
                         style={{ ...inputStyle, paddingLeft: 36 }}
                     />
+                    {suggestionsOpen && products.filter(p => p.title.toLowerCase().includes(searchInput.toLowerCase())).length > 0 && (
+                        <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0, zIndex: 200, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 10, boxShadow: '0 8px 32px rgba(0,0,0,0.10)', overflow: 'hidden' }}>
+                            {products
+                                .filter(p => p.title.toLowerCase().includes(searchInput.toLowerCase()))
+                                .slice(0, 6)
+                                .map(p => {
+                                    const idx = p.title.toLowerCase().indexOf(searchInput.toLowerCase());
+                                    return (
+                                        <button
+                                            key={p._id}
+                                            onMouseDown={() => { handleSearchInput(p.title); setSuggestionsOpen(false); }}
+                                            style={{ width: '100%', padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'none', border: 'none', borderBottom: '1px solid #f5f5f5', cursor: 'pointer', textAlign: 'left', fontFamily: "'Barlow', sans-serif", fontSize: 13, color: '#333' }}
+                                            onMouseEnter={e => (e.currentTarget.style.background = '#f9fffe')}
+                                            onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                                        >
+                                            <span>
+                                                {p.title.slice(0, idx)}
+                                                <strong style={{ color: ACCENT }}>{p.title.slice(idx, idx + searchInput.length)}</strong>
+                                                {p.title.slice(idx + searchInput.length)}
+                                            </span>
+                                            <span style={{ fontSize: 11, color: '#aaa', fontFamily: "'Barlow', sans-serif", flexShrink: 0, marginLeft: 8 }}>
+                                                {p.category?.name}
+                                            </span>
+                                        </button>
+                                    );
+                                })
+                            }
+                        </div>
+                    )}
                 </div>
-
                 {/* Category filter */}
                 <div style={{ position: 'relative', flex: '0 0 180px' }}>
                     <select
