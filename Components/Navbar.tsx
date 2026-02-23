@@ -4,9 +4,17 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Heart, ShoppingBag, Search, X, Menu, ChevronRight, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const ACCENT = '#00d4b6';
 const LINKS = ['HOME', 'SHOP', 'DROPS', 'BRANDS', 'CONTACT'];
+const LINK_HREF: Record<string, string> = {
+  HOME: '/',
+  SHOP: '/shop',
+  DROPS: '/drops',
+  BRANDS: '/brands',
+  CONTACT: '/contact',
+};
 
 export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
@@ -18,6 +26,7 @@ export default function Navbar() {
   const [cartCount] = useState(3);
   const [wishCount] = useState(2);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -201,6 +210,9 @@ export default function Navbar() {
 
         @keyframes fadeSlideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
         .nb-root { animation: fadeSlideDown 0.6s ease both; }
+
+        .nb-link-active { color: #fff !important; }
+        .nb-link-active::after { width: 100% !important; background: #00d4b6; }
       `}</style>
 
       {/* ─── MAIN NAV ─── */}
@@ -248,9 +260,18 @@ export default function Navbar() {
 
           {/* NAV LINKS — desktop */}
           <div style={{ display: 'flex', gap: 36, alignItems: 'center' }} className="hidden md:flex">
-            {LINKS.map(l => (
-              <a key={l} href="#" className="nb-link">{l}</a>
-            ))}
+            {LINKS.map(l => {
+              const isActive = pathname === LINK_HREF[l] || (l === 'SHOP' && pathname.startsWith('/shop'));
+              return (
+                <Link
+                  key={l}
+                  href={LINK_HREF[l] ?? '#'}
+                  className={`nb-link${isActive ? ' nb-link-active' : ''}`}
+                >
+                  {l}
+                </Link>
+              );
+            })}
           </div>
 
           {/* RIGHT SIDE */}
@@ -362,16 +383,14 @@ export default function Navbar() {
         {/* Links */}
         <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', zIndex: 2 }}>
           {LINKS.map((l, i) => (
-            <a
-              key={l}
-              href="#"
+            <Link key={l} href={LINK_HREF[l] ?? '#'}
               className="nb-mobile-link"
               onClick={() => setMobileOpen(false)}
               style={{ animationDelay: `${i * 60}ms` }}
             >
               {l}
               <ChevronRight size={28} className="mob-arrow" />
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -389,7 +408,7 @@ export default function Navbar() {
                 Login
               </a>
             )}
-            
+
           </div>
 
           {/* Cart + Wishlist icons */}
