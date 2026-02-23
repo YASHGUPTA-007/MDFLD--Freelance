@@ -24,8 +24,8 @@ const PRODUCTS: Product[] = [
     id: 0, 
     brand: 'Nike', 
     name: 'Phantom GX Elite', 
-    price: '£229', 
-    originalPrice: '£279',
+    price: '$229', 
+    originalPrice: '$279',
     rating: 4.9, 
     reviews: 3201, 
     tag: 'HOT', 
@@ -37,8 +37,8 @@ const PRODUCTS: Product[] = [
     id: 1, 
     brand: 'Adidas', 
     name: 'Copa Pure.1 FG', 
-    price: '£199', 
-    originalPrice: '£239',
+    price: '$199', 
+    originalPrice: '$239',
     rating: 4.8, 
     reviews: 1782, 
     tag: 'NEW', 
@@ -50,8 +50,8 @@ const PRODUCTS: Product[] = [
     id: 2, 
     brand: 'New Balance', 
     name: 'Furon v7 Pro', 
-    price: '£179', 
-    originalPrice: '£219',
+    price: '$179', 
+    originalPrice: '$219',
     rating: 4.7, 
     reviews: 921, 
     tag: 'SALE', 
@@ -63,8 +63,8 @@ const PRODUCTS: Product[] = [
     id: 3, 
     brand: 'Puma', 
     name: 'King Ultimate FG', 
-    price: '£249', 
-    originalPrice: '£299',
+    price: '$249', 
+    originalPrice: '$299',
     rating: 4.6, 
     reviews: 654, 
     tag: 'LIMITED', 
@@ -76,8 +76,8 @@ const PRODUCTS: Product[] = [
     id: 4, 
     brand: 'Mizuno', 
     name: 'Morelia Neo IV Beta', 
-    price: '£189', 
-    originalPrice: '£229',
+    price: '$189', 
+    originalPrice: '$229',
     rating: 4.9, 
     reviews: 432, 
     tag: 'PRO', 
@@ -89,8 +89,8 @@ const PRODUCTS: Product[] = [
     id: 5, 
     brand: 'Under Armour', 
     name: 'Magnetico Elite 3', 
-    price: '£159', 
-    originalPrice: '£199',
+    price: '$159', 
+    originalPrice: '$199',
     rating: 4.5, 
     reviews: 318, 
     tag: 'DROP', 
@@ -119,9 +119,9 @@ function ProductCard({ product, index }: ProductCardProps) {
   };
 
   const discount = Math.round(
-    ((parseFloat(product.originalPrice.replace('£', '')) - 
-      parseFloat(product.price.replace('£', ''))) / 
-      parseFloat(product.originalPrice.replace('£', ''))) * 100
+    ((parseFloat(product.originalPrice.replace('$', '')) - 
+      parseFloat(product.price.replace('$', ''))) / 
+      parseFloat(product.originalPrice.replace('$', ''))) * 100
   );
 
   return (

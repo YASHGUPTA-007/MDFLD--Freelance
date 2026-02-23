@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const ACCENT = '#00d4b6';
-const LINKS = ['HOME', 'SHOP', 'DROPS', 'BRANDS', 'CONTACT'];
+const LINKS = ['HOME', 'SHOP', 'BRANDS', 'CONTACT'];
 const LINK_HREF: Record<string, string> = {
   HOME: '/',
   SHOP: '/shop',
@@ -283,16 +283,16 @@ export default function Navbar() {
             </button>
 
             {/* Wishlist — desktop only */}
-            <button className="nb-icon hidden md:flex" aria-label="Wishlist">
-              <Heart size={18} />
-              {wishCount > 0 && <span className="nb-badge">{wishCount}</span>}
-            </button>
+          <Link href="/saved" className="nb-icon hidden md:flex" aria-label="Wishlist">
+  <Heart size={18} />
+  {wishCount > 0 && <span className="nb-badge">{wishCount}</span>}
+</Link>
 
             {/* Cart */}
-            <button className="nb-icon" aria-label="Cart">
-              <ShoppingBag size={18} />
-              {cartCount > 0 && <span className="nb-badge">{cartCount}</span>}
-            </button>
+         <Link href="/cart" className="nb-icon" aria-label="Cart">
+  <ShoppingBag size={18} />
+  {cartCount > 0 && <span className="nb-badge">{cartCount}</span>}
+</Link>
 
             {/* ── AUTH BUTTONS — desktop only ── */}
             <div className="hidden md:flex" style={{ alignItems: 'center', gap: 12, marginLeft: 8 }}>
@@ -413,14 +413,14 @@ export default function Navbar() {
 
           {/* Cart + Wishlist icons */}
           <div style={{ display: 'flex', gap: 4 }}>
-            <button className="nb-icon" style={{ width: 44, height: 44 }}>
-              <Heart size={19} />
-              {wishCount > 0 && <span className="nb-badge">{wishCount}</span>}
-            </button>
-            <button className="nb-icon" style={{ width: 44, height: 44 }}>
-              <ShoppingBag size={19} />
-              {cartCount > 0 && <span className="nb-badge">{cartCount}</span>}
-            </button>
+         <Link href="/saved" className="nb-icon" style={{ width: 44, height: 44 }} onClick={() => setMobileOpen(false)}>
+  <Heart size={19} />
+  {wishCount > 0 && <span className="nb-badge">{wishCount}</span>}
+</Link>
+<Link href="/cart" className="nb-icon" style={{ width: 44, height: 44 }} onClick={() => setMobileOpen(false)}>
+  <ShoppingBag size={19} />
+  {cartCount > 0 && <span className="nb-badge">{cartCount}</span>}
+</Link>
           </div>
         </div>
       </div>

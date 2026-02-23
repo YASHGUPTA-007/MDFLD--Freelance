@@ -30,12 +30,12 @@ interface ActivityItem {
 }
 
 const DROPS: Drop[] = [
-  { id: 0, brand: "Nike", name: "Phantom GX2 Elite", shortName: "Phantom GX2", time: "2m", price: "£259", originalPrice: "£299", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=90&auto=format&fit=crop", stock: 6, viewers: 34, hot: true, tag: "JUST DROPPED", number: "01" },
-  { id: 1, brand: "Adidas", name: "X Crazyfast.1 FG", shortName: "Crazyfast.1", time: "18m", price: "£199", originalPrice: "£239", img: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&q=90&auto=format&fit=crop", stock: 14, viewers: 21, hot: true, tag: "LIMITED", number: "02" },
-  { id: 2, brand: "New Balance", name: "Tekela V4 Magia", shortName: "Tekela V4", time: "1h", price: "£179", originalPrice: "£219", img: "https://images.unsplash.com/photo-1539185441755-769473a23570?w=800&q=90&auto=format&fit=crop", stock: 22, viewers: 9, hot: false, tag: "NEW", number: "03" },
-  { id: 3, brand: "Puma", name: "King Platinum 21", shortName: "King Platinum", time: "2h", price: "£149", originalPrice: "£189", img: "https://images.unsplash.com/photo-1556906781-9a412961a28c?w=800&q=90&auto=format&fit=crop", stock: 3, viewers: 47, hot: true, tag: "ALMOST GONE", number: "04" },
-  { id: 4, brand: "Mizuno", name: "Wave Cup Legend", shortName: "Wave Cup", time: "3h", price: "£169", originalPrice: "£209", img: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=90&auto=format&fit=crop", stock: 18, viewers: 7, hot: false, tag: "PRO", number: "05" },
-  { id: 5, brand: "Under Armour", name: "Clone Magnetico Pro", shortName: "Magnetico Pro", time: "5h", price: "£129", originalPrice: "£159", img: "https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=800&q=90&auto=format&fit=crop", stock: 31, viewers: 4, hot: false, tag: "SALE", number: "06" },
+  { id: 0, brand: "Nike", name: "Phantom GX2 Elite", shortName: "Phantom GX2", time: "2m", price: "$259", originalPrice: "$299", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=90&auto=format&fit=crop", stock: 6, viewers: 34, hot: true, tag: "JUST DROPPED", number: "01" },
+  { id: 1, brand: "Adidas", name: "X Crazyfast.1 FG", shortName: "Crazyfast.1", time: "18m", price: "$199", originalPrice: "$239", img: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&q=90&auto=format&fit=crop", stock: 14, viewers: 21, hot: true, tag: "LIMITED", number: "02" },
+  { id: 2, brand: "New Balance", name: "Tekela V4 Magia", shortName: "Tekela V4", time: "1h", price: "$179", originalPrice: "$219", img: "https://images.unsplash.com/photo-1539185441755-769473a23570?w=800&q=90&auto=format&fit=crop", stock: 22, viewers: 9, hot: false, tag: "NEW", number: "03" },
+  { id: 3, brand: "Puma", name: "King Platinum 21", shortName: "King Platinum", time: "2h", price: "$149", originalPrice: "$189", img: "https://images.unsplash.com/photo-1556906781-9a412961a28c?w=800&q=90&auto=format&fit=crop", stock: 3, viewers: 47, hot: true, tag: "ALMOST GONE", number: "04" },
+  { id: 4, brand: "Mizuno", name: "Wave Cup Legend", shortName: "Wave Cup", time: "3h", price: "$169", originalPrice: "$209", img: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=90&auto=format&fit=crop", stock: 18, viewers: 7, hot: false, tag: "PRO", number: "05" },
+  { id: 5, brand: "Under Armour", name: "Clone Magnetico Pro", shortName: "Magnetico Pro", time: "5h", price: "$129", originalPrice: "$159", img: "https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=800&q=90&auto=format&fit=crop", stock: 31, viewers: 4, hot: false, tag: "SALE", number: "06" },
 ];
 
 const ACTIVITY: ActivityItem[] = [

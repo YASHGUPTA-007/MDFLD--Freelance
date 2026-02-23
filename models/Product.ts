@@ -16,6 +16,7 @@ export interface IProduct extends Document {
         url: string;
         public_id: string;
     }[];
+    featuredImageIndex: number; // ← NEW: index into images[] that is the hero/featured image
     isActive: boolean;
     createdBy: mongoose.Types.ObjectId;
     createdAt: Date;
@@ -43,12 +44,16 @@ const ProductSchema = new Schema<IProduct>({
     },
 
     stock: { type: Number, default: 0 },
+
     images: [
         {
             url: { type: String, required: true },
             public_id: { type: String, required: true },
         },
     ],
+
+    // Index of the featured/hero image within the images array. Defaults to 0.
+    featuredImageIndex: { type: Number, default: 0 },
 
     isActive: { type: Boolean, default: true },
 
@@ -60,7 +65,6 @@ const ProductSchema = new Schema<IProduct>({
     createdAt: { type: Date, default: Date.now },
 });
 
-// Useful indexes
 ProductSchema.index({ category: 1 });
 ProductSchema.index({ price: 1 });
 ProductSchema.index({ brand: 1 });

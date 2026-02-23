@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
             ...orders.map(o => ({
                 type: 'order' as const,
                 label: 'New order placed',
-                detail: `£${o.totalAmount.toFixed(2)}`,
+                detail: `$${o.totalAmount.toFixed(2)}`,
                 subdetail: null,
                 createdAt: o.createdAt,
             })),

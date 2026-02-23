@@ -20,7 +20,7 @@ const PRODUCTS: Product[] = [
     brand: 'Nike',
     name: 'Mercurial\nSuperfly 10',
     tag: 'Just Dropped',
-    price: '£289',
+    price: '$289',
     img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1400&q=95&auto=format&fit=crop',
   },
   {
@@ -28,7 +28,7 @@ const PRODUCTS: Product[] = [
     brand: 'Adidas',
     name: 'Predator\nElite',
     tag: 'Limited Edition',
-    price: '£259',
+    price: '$259',
     img: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=1400&q=95&auto=format&fit=crop',
   },
   {
@@ -36,7 +36,7 @@ const PRODUCTS: Product[] = [
     brand: 'Puma',
     name: 'Future 7\nUltimate',
     tag: 'Pro Exclusive',
-    price: '£219',
+    price: '$219',
     img: 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=1400&q=95&auto=format&fit=crop',
   },
 ];
@@ -132,7 +132,7 @@ export default function HeroSection() {
       <div style={{ position: 'absolute', top: 88, left: 0, right: 0, zIndex: 20, background: ACCENT, overflow: 'hidden', padding: '8px 0' }}>
         <div className="ticker-track">
           {[...Array(2)].map((_, g) =>
-            ['Blockchain Verified', '✦', 'Free Global Shipping £100+', '✦', 'New Drops Every Friday', '✦', '150+ Countries', '✦', '30-Day Returns', '✦'].map((t, i) => (
+            ['Blockchain Verified', '✦', 'Free Global Shipping $100+', '✦', 'New Drops Every Friday', '✦', '150+ Countries', '✦', '30-Day Returns', '✦'].map((t, i) => (
               <span key={`${g}-${i}`} style={{ fontFamily: "'Barlow', sans-serif", fontSize: 9, fontWeight: 800, letterSpacing: '0.3em', textTransform: 'uppercase', color: t === '✦' ? 'rgba(2,6,6,0.3)' : '#020606', padding: '0 24px' }}>{t}</span>
             ))
           )}

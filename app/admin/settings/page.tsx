@@ -329,78 +329,7 @@ export default function SettingsPage() {
       </Card>
 
       {/* ── 2. Store Settings ── */}
-      <Card icon={Store} title="Store Settings">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-
-          {/* Logo upload */}
-          <div>
-            <label style={labelStyle}>Store Logo</label>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <div style={{ width: 72, height: 72, borderRadius: 12, border: '1px solid #e5e5e5', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
-                {logoPreview
-                  ? <Image src={logoPreview} alt="Logo" width={72} height={72} style={{ objectFit: 'contain' }} />
-                  : <Store size={28} color="#ccc" />
-                }
-              </div>
-              <div>
-                <button
-                  onClick={() => logoInputRef.current?.click()}
-                  style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 16px', border: '1px solid #e5e5e5', borderRadius: 8, background: '#fff', cursor: 'pointer', fontFamily: "'Barlow', sans-serif", fontSize: 12, fontWeight: 600, color: '#555' }}
-                >
-                  <Upload size={14} /> Upload Logo
-                </button>
-                <p style={{ fontFamily: "'Barlow', sans-serif", fontSize: 11, color: '#aaa', marginTop: 6 }}>PNG, JPG up to 2MB</p>
-              </div>
-            </div>
-            <input ref={logoInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
-              const f = e.target.files?.[0];
-              if (f) { setLogoFile(f); setLogoPreview(URL.createObjectURL(f)); }
-            }} />
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-            <div>
-              <label style={labelStyle}>Store Name</label>
-              <input style={inputStyle} value={storeName} onChange={e => setStoreName(e.target.value)} placeholder="e.g. MDFLD Store" />
-            </div>
-            <div>
-              <label style={labelStyle}>Support Email</label>
-              <input style={inputStyle} type="email" value={supportEmail} onChange={e => setSupportEmail(e.target.value)} placeholder="support@store.com" />
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-            <div>
-              <label style={labelStyle}>Support Phone</label>
-              <input style={inputStyle} value={supportPhone} onChange={e => setSupportPhone(e.target.value)} placeholder="+44 7700 000000" />
-            </div>
-            <div>
-              <label style={labelStyle}>Accent Color</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <input
-                  type="color"
-                  value={accentColor}
-                  onChange={e => setAccentColor(e.target.value)}
-                  style={{ width: 44, height: 44, borderRadius: 8, border: '1px solid #e5e5e5', background: '#fafafa', padding: 4 }}
-                />
-                <input
-                  style={{ ...inputStyle, flex: 1 }}
-                  value={accentColor}
-                  onChange={e => setAccentColor(e.target.value)}
-                  placeholder="#00d4b6"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button onClick={handleSaveStore} disabled={storeLoading} style={saveBtn(storeLoading)}>
-              {storeLoading ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <Check size={14} />}
-              Save Settings
-            </button>
-          </div>
-        </div>
-      </Card>
+      
 
       {/* ── 3. Security & System ── */}
       <Card icon={Shield} title="Security & System">

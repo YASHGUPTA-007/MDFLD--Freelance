@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronRight, ArrowLeft, ShoppingBag, Heart, Share2, Tag, Package, Layers, Users } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, ShoppingBag, Heart, Share2, Tag, Package, Layers, Users, Sparkles } from 'lucide-react';
 import gsap from 'gsap';
 import { useToast } from '@/Components/Toast';
 
@@ -50,18 +50,21 @@ function ImageCarousel({ images }: { images: { url: string }[] }) {
         const el = mainRef.current;
         if (!el) { setCurrent(next); setAnimating(false); return; }
 
-        const xOut = dir === 'next' ? '-8%' : '8%';
-        const xIn = dir === 'next' ? '8%' : '-8%';
+        // Added a slight scale down and blur for a more dramatic, fluid switch
+        const xOut = dir === 'next' ? '-15%' : '15%';
+        const xIn = dir === 'next' ? '15%' : '-15%';
 
         gsap.to(el, {
-            x: xOut, opacity: 0, duration: 0.22, ease: 'power2.in', onComplete: () => {
+            x: xOut, scale: 0.95, opacity: 0, filter: 'blur(4px)', duration: 0.3, ease: 'power2.inOut', onComplete: () => {
                 setCurrent(next);
-                gsap.fromTo(el, { x: xIn, opacity: 0 }, { x: 0, opacity: 1, duration: 0.28, ease: 'power2.out', onComplete: () => setAnimating(false) });
+                gsap.fromTo(el, 
+                    { x: xIn, scale: 1.05, opacity: 0, filter: 'blur(8px)' }, 
+                    { x: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.4, ease: 'power3.out', onComplete: () => setAnimating(false) }
+                );
             }
         });
     }, [animating, current, total]);
 
-    // Keyboard nav
     useEffect(() => {
         const h = (e: KeyboardEvent) => {
             if (e.key === 'ArrowRight') go('next');
@@ -72,50 +75,41 @@ function ImageCarousel({ images }: { images: { url: string }[] }) {
     }, [go]);
 
     if (total === 0) return (
-        <div style={{ aspectRatio: '3/4', background: '#111d1d', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>
-            📦
-        </div>
+        <div className="empty-state-box">📦</div>
     );
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-
+        <div className="carousel-wrapper">
             {/* Main image */}
-            <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', background: '#111d1d', aspectRatio: '3/4' }}>
-                <div ref={mainRef} style={{ position: 'absolute', inset: 0 }}>
+            <div className="main-image-container group">
+                {/* Subtle background glow mimicking the image */}
+                <div className="absolute inset-0 bg-accent/20 blur-[100px] -z-10 transition-opacity duration-700 opacity-50 group-hover:opacity-80"></div>
+                
+                <div ref={mainRef} className="absolute inset-0">
                     <Image
                         src={images[current].url}
                         alt={`Product image ${current + 1}`}
                         fill
                         priority
                         sizes="(max-width: 768px) 100vw, 50vw"
-                        style={{ objectFit: 'cover' }}
+                        className="object-cover transition-transform duration-1000 group-hover:scale-105"
                     />
                 </div>
 
-                {/* Prev / Next arrows */}
+                {/* Glassmorphic Controls */}
                 {total > 1 && (
                     <>
-                        <button onClick={() => go('prev')} className="carousel-arrow" style={{ left: 14 }} aria-label="Previous image">
+                        <button onClick={() => go('prev')} className="carousel-arrow left-4" aria-label="Previous image">
                             <ChevronLeft size={20} />
                         </button>
-                        <button onClick={() => go('next')} className="carousel-arrow" style={{ right: 14 }} aria-label="Next image">
+                        <button onClick={() => go('next')} className="carousel-arrow right-4" aria-label="Next image">
                             <ChevronRight size={20} />
                         </button>
                     </>
                 )}
 
-                {/* Counter pill */}
                 {total > 1 && (
-                    <div style={{
-                        position: 'absolute', bottom: 14, right: 14,
-                        background: 'rgba(2,6,6,0.75)', backdropFilter: 'blur(8px)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: 100, padding: '4px 12px',
-                        fontFamily: "'Barlow', sans-serif", fontSize: 11,
-                        fontWeight: 600, color: 'rgba(255,255,255,0.7)',
-                        letterSpacing: '0.05em',
-                    }}>
+                    <div className="carousel-counter">
                         {current + 1} / {total}
                     </div>
                 )}
@@ -123,23 +117,15 @@ function ImageCarousel({ images }: { images: { url: string }[] }) {
 
             {/* Thumbnail strip */}
             {total > 1 && (
-                <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }} className="thumb-scroll">
+                <div className="thumb-scroll">
                     {images.map((img, i) => (
                         <button
                             key={i}
                             onClick={() => { if (!animating) setCurrent(i); }}
-                            style={{
-                                flexShrink: 0,
-                                width: 64, height: 80,
-                                borderRadius: 8, overflow: 'hidden',
-                                border: `2px solid ${i === current ? ACCENT : 'rgba(255,255,255,0.08)'}`,
-                                background: '#111d1d', cursor: 'pointer', padding: 0,
-                                position: 'relative',
-                                transition: 'border-color 0.2s',
-                                opacity: i === current ? 1 : 0.55,
-                            }}
+                            className={`thumb-btn ${i === current ? 'active' : ''}`}
                         >
-                            <Image src={img.url} alt={`Thumb ${i + 1}`} fill sizes="64px" style={{ objectFit: 'cover' }} />
+                            <Image src={img.url} alt={`Thumb ${i + 1}`} fill sizes="64px" className="object-cover" />
+                            {i !== current && <div className="absolute inset-0 bg-black/40 hover:bg-black/10 transition-colors"></div>}
                         </button>
                     ))}
                 </div>
@@ -151,20 +137,20 @@ function ImageCarousel({ images }: { images: { url: string }[] }) {
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 function Skeleton() {
     return (
-        <div className="pdp-grid" style={{ padding: 'clamp(24px, 5vw, 64px)', gap: 'clamp(24px, 4vw, 64px)' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <div className="sk" style={{ aspectRatio: '3/4', borderRadius: 16 }} />
-                <div style={{ display: 'flex', gap: 8 }}>
-                    {[0, 1, 2].map(i => <div key={i} className="sk" style={{ width: 64, height: 80, borderRadius: 8 }} />)}
+        <div className="pdp-grid pt-10">
+            <div className="flex flex-col gap-4">
+                <div className="sk aspect-[3/4] rounded-2xl" />
+                <div className="flex gap-3">
+                    {[0, 1, 2].map(i => <div key={i} className="sk w-16 h-20 rounded-xl" />)}
                 </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 20, paddingTop: 8 }}>
-                <div className="sk" style={{ height: 12, width: '30%', borderRadius: 4 }} />
-                <div className="sk" style={{ height: 52, width: '90%', borderRadius: 6 }} />
-                <div className="sk" style={{ height: 32, width: '40%', borderRadius: 6 }} />
-                <div className="sk" style={{ height: 1, width: '100%' }} />
-                {[80, 60, 90, 70].map((w, i) => (
-                    <div key={i} className="sk" style={{ height: 12, width: `${w}%`, borderRadius: 4 }} />
+            <div className="flex flex-col gap-6 pt-4">
+                <div className="sk h-4 w-1/3 rounded" />
+                <div className="sk h-14 w-11/12 rounded-lg" />
+                <div className="sk h-10 w-2/5 rounded-lg" />
+                <div className="sk h-[1px] w-full" />
+                {[80, 65, 90, 70].map((w, i) => (
+                    <div key={i} className="sk h-3 rounded" style={{ width: `${w}%` }} />
                 ))}
             </div>
         </div>
@@ -183,8 +169,12 @@ export default function ProductDetailPage() {
     const { showToast, ToastContainer } = useToast();
     const [copied, setCopied] = useState(false);
 
+    // Entrance Animation Ref
+    const contentRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         if (!id) return;
+        // Simulating fetch for preview, replace with actual endpoint
         fetch(`/api/products/${id}`)
             .then(r => r.json())
             .then(d => {
@@ -202,8 +192,24 @@ export default function ProductDetailPage() {
             .then(d => {
                 if (d.wishlist) setWishlist(d.wishlist.includes(product._id));
             })
-            .catch(() => { }); // not logged in — silently ignore
+            .catch(() => { });
     }, [product]);
+
+    // Trigger Entrance Animations when product loads
+    useEffect(() => {
+        if (product && !loading && contentRef.current) {
+            const elements = contentRef.current.querySelectorAll('.stagger-animate');
+            gsap.fromTo(elements, 
+                { y: 30, opacity: 0, filter: 'blur(4px)' }, 
+                { y: 0, opacity: 1, filter: 'blur(0px)', stagger: 0.08, duration: 0.8, ease: 'power3.out', delay: 0.1 }
+            );
+
+            gsap.fromTo('.carousel-wrapper',
+                { scale: 0.95, opacity: 0 },
+                { scale: 1, opacity: 1, duration: 1, ease: 'expo.out' }
+            );
+        }
+    }, [product, loading]);
 
     const handleShare = () => {
         navigator.clipboard.writeText(window.location.href).then(() => {
@@ -213,34 +219,27 @@ export default function ProductDetailPage() {
     };
 
     const handleWishlist = async () => {
-        if (wishlistLoading || !product) return;
-        setWishlistLoading(true);
-        try {
-            const res = await fetch('/api/wishlist', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ productId: product._id }),
-            });
-
-            if (res.status === 401) {
-                showToast('Login to save items', 'info');
-                return;
-            }
-
-            const data = await res.json();
-            if (!res.ok) { showToast(data.error ?? 'Something went wrong', 'error'); return; }
-
+    if (wishlistLoading || !product) return;
+    setWishlistLoading(true);
+    try {
+        const res = await fetch('/api/wishlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId: product._id }),
+        });
+        const data = await res.json();
+        if (res.ok) {
             setWishlist(data.added);
-            showToast(
-                data.added ? 'Added to wishlist' : 'Removed from wishlist',
-                data.added ? 'wishlist' : 'remove'
-            );
-        } catch {
-            showToast('Something went wrong', 'error');
-        } finally {
-            setWishlistLoading(false);
+            showToast(data.added ? 'Added to wishlist' : 'Removed from wishlist', data.added ? 'wishlist' : 'remove');
+        } else if (res.status === 401) {
+            showToast('Please log in to save items', 'error');
         }
-    };
+    } catch {
+        showToast('Something went wrong', 'error');
+    } finally {
+        setWishlistLoading(false);
+    }
+};
 
     const isOutOfStock = product?.stock === 0;
     const discount = product?.compareAtPrice
@@ -250,305 +249,290 @@ export default function ProductDetailPage() {
     const conditionColor = product ? (CONDITION_COLOR[product.condition] ?? ACCENT) : ACCENT;
 
     return (
-        <div style={{ background: '#020606', minHeight: '100vh', color: '#fff', paddingTop: 80 }}>
+        <div className="page-wrapper">
             <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');
-        *, *::before, *::after { box-sizing: border-box; }
+                @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');
+                
+                :root {
+                    --bg-dark: #020606;
+                    --bg-panel: #0a1111;
+                    --accent: ${ACCENT};
+                    --accent-glow: rgba(0, 212, 182, 0.4);
+                }
 
-        .grid-bg {
-          position:fixed; inset:0; z-index:0; pointer-events:none;
-          background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-          background-size: 56px 56px;
-        }
+                *, *::before, *::after { box-sizing: border-box; }
 
-        /* Two-col layout on desktop */
-        .pdp-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: clamp(24px, 4vw, 48px);
-          padding: clamp(24px, 5vw, 64px);
-          max-width: 1200px;
-          margin: 0 auto;
-        }
-        @media (min-width: 900px) {
-          .pdp-grid {
-            grid-template-columns: 1fr 1fr;
-            align-items: start;
-          }
-        }
+                .page-wrapper {
+                    background: var(--bg-dark);
+                    min-height: 100vh;
+                    color: #fff;
+                    padding-top: 80px;
+                    position: relative;
+                    overflow: hidden;
+                }
 
-        /* Sticky right col on desktop */
-        @media (min-width: 900px) {
-          .pdp-right { position: sticky; top: 100px; }
-        }
+                /* Animated Grid Background for continuous "alive" feel */
+                @keyframes panGrid {
+                    0% { transform: translateY(0); }
+                    100% { transform: translateY(56px); }
+                }
+                .grid-bg {
+                    position: fixed; top: -56px; left: 0; right: 0; bottom: -56px;
+                    z-index: 0; pointer-events: none;
+                    background-image: 
+                        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+                    background-size: 56px 56px;
+                    animation: panGrid 20s linear infinite;
+                    mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+                    -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+                }
 
-        /* Carousel arrows */
-        .carousel-arrow {
-          position: absolute; top: 50%; transform: translateY(-50%);
-          background: rgba(2,6,6,0.75); backdrop-filter: blur(8px);
-          border: 1px solid rgba(255,255,255,0.12); border-radius: 50%;
-          width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-          cursor: pointer; color: #fff; transition: all 0.2s; z-index: 10;
-        }
-        .carousel-arrow:hover { background: rgba(0,212,182,0.15); border-color: ${ACCENT}; color: ${ACCENT}; }
+                /* Layout */
+                .content-layer { position: relative; z-index: 10; max-width: 1280px; margin: 0 auto; }
+                
+                .pdp-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: clamp(32px, 5vw, 64px);
+                    padding: clamp(24px, 5vw, 64px);
+                }
+                @media (min-width: 960px) {
+                    .pdp-grid { grid-template-columns: 1fr 1.1fr; align-items: start; }
+                    .pdp-right { position: sticky; top: 120px; }
+                }
 
-        /* Thumb scrollbar */
-        .thumb-scroll::-webkit-scrollbar { display: none; }
+                /* Carousel Styling */
+                .carousel-wrapper { display: flex; flex-direction: column; gap: 16px; opacity: 0; }
+                .main-image-container {
+                    position: relative; border-radius: 20px; overflow: hidden; background: var(--bg-panel);
+                    aspect-ratio: 3/4; border: 1px solid rgba(255,255,255,0.05);
+                }
+                .carousel-arrow {
+                    position: absolute; top: 50%; transform: translateY(-50%);
+                    background: rgba(10, 17, 17, 0.6); backdrop-filter: blur(12px);
+                    border: 1px solid rgba(255,255,255,0.1); border-radius: 50px;
+                    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+                    cursor: pointer; color: #fff; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10;
+                }
+                .carousel-arrow:hover { 
+                    background: rgba(0,212,182,0.2); border-color: var(--accent); color: var(--accent); 
+                    box-shadow: 0 0 20px var(--accent-glow); scale: 1.1;
+                }
+                .carousel-counter {
+                    position: absolute; bottom: 16px; right: 16px;
+                    background: rgba(10, 17, 17, 0.6); backdrop-filter: blur(12px);
+                    border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; padding: 6px 16px;
+                    font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.9);
+                    letter-spacing: 0.05em; z-index: 10;
+                }
+                .thumb-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+                .thumb-scroll::-webkit-scrollbar { display: none; }
+                .thumb-btn {
+                    flex-shrink: 0; width: 72px; height: 90px; border-radius: 12px; overflow: hidden;
+                    border: 2px solid transparent; background: var(--bg-panel); cursor: pointer; padding: 0;
+                    position: relative; transition: all 0.3s ease;
+                }
+                .thumb-btn.active { border-color: var(--accent); box-shadow: 0 0 15px rgba(0,212,182,0.3); }
+                .thumb-btn:not(.active) { opacity: 0.6; }
+                .thumb-btn:hover:not(.active) { opacity: 1; transform: translateY(-2px); }
 
-        /* Divider */
-        .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 24px 0; }
+                /* Typography & Details */
+                .overline-text {
+                    font-family: 'Barlow', sans-serif; font-size: 11px; font-weight: 700;
+                    letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent);
+                }
+                .product-title {
+                    font-family: 'Barlow Condensed', sans-serif; font-size: clamp(36px, 5vw, 64px);
+                    font-weight: 900; text-transform: uppercase; line-height: 0.95; letter-spacing: -0.02em;
+                    color: #fff; margin: 0 0 24px;
+                    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+                }
+                .price-tag {
+                    font-family: 'Barlow Condensed', sans-serif; font-size: 42px; font-weight: 900; color: #fff;
+                    display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+                }
+                .discount-badge {
+                    font-size: 16px; color: #020606; background: var(--accent); border-radius: 6px; padding: 4px 12px;
+                    box-shadow: 0 0 15px var(--accent-glow);
+                }
 
-        /* Meta row */
-        .meta-pill {
-          display: inline-flex; align-items: center; gap: 7px;
-          background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 6px; padding: 8px 14px;
-          font-family: 'Barlow', sans-serif; font-size: 12px; color: rgba(255,255,255,0.65);
-        }
-        .meta-pill svg { color: ${ACCENT}; flex-shrink: 0; }
+                /* Divider */
+                .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); margin: 32px 0; }
 
-        /* CTA buttons */
-        .btn-primary {
-          width: 100%; padding: 16px;
-          background: ${ACCENT}; border: none; border-radius: 10px;
-          font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 900;
-          letter-spacing: 0.12em; text-transform: uppercase; color: #020606;
-          cursor: pointer; transition: all 0.2s;
-        }
-        .btn-primary:hover:not(:disabled) { background: #00f0cf; box-shadow: 0 0 24px rgba(0,212,182,0.35); }
-        .btn-primary:disabled { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); cursor: not-allowed; }
+                /* Meta Pills */
+                .meta-pill {
+                    display: inline-flex; align-items: center; gap: 8px;
+                    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+                    border-radius: 8px; padding: 10px 16px;
+                    font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.8);
+                    transition: all 0.3s ease;
+                }
+                .meta-pill:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); transform: translateY(-2px); }
+                .meta-pill svg { color: var(--accent); }
 
-        .btn-secondary {
-          width: 100%; padding: 16px;
-          background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
-          font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 900;
-          letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.7);
-          cursor: pointer; transition: all 0.2s;
-        }
-        .btn-secondary:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
+                /* Buttons */
+                .btn-primary {
+                    flex: 1; padding: 18px; position: relative; overflow: hidden;
+                    background: var(--accent); border: none; border-radius: 12px;
+                    font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 900;
+                    letter-spacing: 0.12em; text-transform: uppercase; color: #020606;
+                    cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                .btn-primary::after {
+                    content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+                    transform: skewX(-20deg); transition: all 0.5s;
+                }
+                .btn-primary:hover:not(:disabled) { 
+                    background: #00f0cf; box-shadow: 0 8px 30px rgba(0,212,182,0.4); transform: translateY(-2px); 
+                }
+                .btn-primary:hover::after { left: 150%; }
+                .btn-primary:disabled { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.2); cursor: not-allowed; }
 
-        .btn-icon {
-          width: 48px; height: 48px; border-radius: 10px; flex-shrink: 0;
-          background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-          display: flex; align-items: center; justify-content: center;
-          cursor: pointer; transition: all 0.2s; color: rgba(255,255,255,0.6);
-        }
-        .btn-icon:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
-        .btn-icon.active { background: rgba(255,60,80,0.12); border-color: rgba(255,60,80,0.4); color: #ff3c50; }
+                .btn-icon {
+                    width: 60px; height: 60px; border-radius: 12px; flex-shrink: 0;
+                    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+                    display: flex; align-items: center; justify-content: center;
+                    cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: rgba(255,255,255,0.6);
+                }
+                .btn-icon:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); color: #fff; transform: translateY(-2px); }
+                .btn-icon.active { background: rgba(255,60,80,0.1); border-color: rgba(255,60,80,0.4); color: #ff3c50; box-shadow: 0 4px 20px rgba(255,60,80,0.2); }
 
-        /* Back btn */
-        .back-btn {
-          display: inline-flex; align-items: center; gap: 8px;
-          background: none; border: none; cursor: pointer;
-          font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 600;
-          letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4);
-          transition: color 0.2s; padding: 0;
-        }
-        .back-btn:hover { color: #fff; }
+                /* Status & Dots */
+                @keyframes pulse-dot { 0% {box-shadow: 0 0 0 0 rgba(0,212,182,0.4)} 70% {box-shadow: 0 0 0 8px transparent} 100% {box-shadow: 0 0 0 0 transparent} }
+                @keyframes pulse-dot-red { 0% {box-shadow: 0 0 0 0 rgba(248,113,113,0.4)} 70% {box-shadow: 0 0 0 8px transparent} 100% {box-shadow: 0 0 0 0 transparent} }
+                .stock-dot { width: 8px; height: 8px; border-radius: 50%; }
+                .stock-dot.in-stock { background: var(--accent); animation: pulse-dot 2s infinite; }
+                .stock-dot.out-of-stock { background: #f87171; animation: pulse-dot-red 2s infinite; }
 
-        /* Skeleton */
-        @keyframes shimmer { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
-        .sk {
-          background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.04) 75%);
-          background-size: 400px 100%; animation: shimmer 1.4s ease infinite;
-        }
-
-        /* Stock badge */
-        @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
-        .stock-dot { width: 6px; height: 6px; border-radius: 50%; animation: pulse-dot 2s ease infinite; }
-
-        /* Description */
-        .desc-text {
-          font-family: 'Barlow', sans-serif; font-size: 14px; line-height: 1.75;
-          color: rgba(255,255,255,0.55); white-space: pre-wrap;
-        }
-      `}</style>
+                /* Skeletons */
+                @keyframes shimmer { 0%{background-position:-1000px 0} 100%{background-position:1000px 0} }
+                .sk {
+                    background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.02) 75%);
+                    background-size: 1000px 100%; animation: shimmer 2s infinite linear;
+                }
+            `}</style>
 
             <div className="grid-bg" />
 
-            <div style={{ position: 'relative', zIndex: 10 }}>
-
+            <div className="content-layer">
                 {/* ── Back nav ── */}
-                <div style={{ padding: 'clamp(16px, 3vw, 32px) clamp(24px, 5vw, 64px) 0', maxWidth: 1200, margin: '0 auto' }}>
-                    <button className="back-btn" onClick={() => router.back()}>
-                        <ArrowLeft size={14} />
-                        Back to shop
+                <div style={{ padding: '0 clamp(24px, 5vw, 64px)' }}>
+                    <button className="flex items-center gap-2 text-[12px] font-bold tracking-[0.1em] uppercase text-white/40 hover:text-white transition-colors" onClick={() => router.back()}>
+                        <ArrowLeft size={16} /> Back to shop
                     </button>
                 </div>
 
-                {/* ── Loading ── */}
                 {loading && <Skeleton />}
 
-                {/* ── Not found ── */}
                 {notFound && !loading && (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '100px 24px', gap: 16 }}>
-                        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 48, fontWeight: 900, color: 'rgba(255,255,255,0.1)' }}>404</div>
-                        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 22, fontWeight: 700, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}>Product not found</div>
-                        <button className="back-btn" style={{ marginTop: 8 }} onClick={() => router.push('/shop')}>
-                            <ArrowLeft size={14} /> Go to shop
+                    <div className="flex flex-col items-center justify-center py-32 gap-4">
+                        <div className="text-8xl font-black font-['Barlow_Condensed'] text-white/5">404</div>
+                        <div className="text-2xl font-bold font-['Barlow_Condensed'] uppercase tracking-widest text-white/40">Item M.I.A.</div>
+                        <button className="mt-4 flex items-center gap-2 text-accent border border-accent/20 px-6 py-3 rounded-lg hover:bg-accent/10 transition-colors" onClick={() => router.push('/shop')}>
+                            <ArrowLeft size={14} /> Return to Grid
                         </button>
                     </div>
                 )}
 
-                {/* ── Product ── */}
                 {product && !loading && (
-                    <div className="pdp-grid">
-
+                    <div className="pdp-grid" ref={contentRef}>
                         {/* ─ LEFT: Images ─ */}
                         <div>
                             <ImageCarousel images={product.images} />
                         </div>
 
                         {/* ─ RIGHT: Details ─ */}
-                        <div className="pdp-right" style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-
-                            {/* Breadcrumb / category */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-                                <span style={{ fontFamily: "'Barlow', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: ACCENT }}>
-                                    {product.category?.name ?? 'Product'}
+                        <div className="pdp-right flex flex-col">
+                            
+                            <div className="stagger-animate flex items-center gap-2 mb-4">
+                                <span className="overline-text flex items-center gap-1">
+                                    <Sparkles size={12} /> {product.category?.name ?? 'Product'}
                                 </span>
                                 {product.brand && (
                                     <>
-                                        <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 10 }}>·</span>
-                                        <span style={{ fontFamily: "'Barlow', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}>
-                                            {product.brand}
-                                        </span>
+                                        <span className="text-white/20 text-[10px]">•</span>
+                                        <span className="overline-text text-white/50">{product.brand}</span>
                                     </>
                                 )}
                             </div>
 
-                            {/* Title */}
-                            <h1 style={{
-                                fontFamily: "'Barlow Condensed', sans-serif",
-                                fontSize: 'clamp(32px, 5vw, 52px)',
-                                fontWeight: 900, textTransform: 'uppercase',
-                                lineHeight: 1, letterSpacing: '-0.01em',
-                                color: '#fff', margin: '0 0 20px',
-                            }}>
-                                {product.title}
-                            </h1>
+                            <h1 className="stagger-animate product-title">{product.title}</h1>
 
-                            {/* Price */}
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 20 }}>
-                                <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 36, fontWeight: 900, color: '#fff' }}>
-                                    £{product.price}
-                                </span>
+                            <div className="stagger-animate price-tag">
+                                <span>${product.price}</span>
                                 {product.compareAtPrice && (
-                                    <span style={{ fontFamily: "'Barlow', sans-serif", fontSize: 18, color: 'rgba(255,255,255,0.3)', textDecoration: 'line-through' }}>
-                                        £{product.compareAtPrice}
-                                    </span>
+                                    <span className="text-2xl text-white/30 line-through font-normal">${product.compareAtPrice}</span>
                                 )}
                                 {discount && (
-                                    <span style={{
-                                        fontFamily: "'Barlow Condensed', sans-serif", fontSize: 16, fontWeight: 900,
-                                        color: ACCENT, background: 'rgba(0,212,182,0.12)',
-                                        border: `1px solid rgba(0,212,182,0.25)`, borderRadius: 5, padding: '3px 10px',
-                                    }}>
-                                        -{discount}%
-                                    </span>
+                                    <span className="discount-badge">SAVE {discount}%</span>
                                 )}
                             </div>
 
-                            {/* Condition + stock */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
+                            <div className="stagger-animate flex items-center gap-4 mb-8">
                                 <div style={{
                                     background: 'rgba(2,6,6,0.8)', border: `1px solid ${conditionColor}`,
-                                    borderRadius: 5, padding: '5px 12px',
-                                    fontFamily: "'Barlow', sans-serif", fontSize: 11, fontWeight: 700,
+                                    borderRadius: '6px', padding: '6px 14px',
+                                    fontFamily: "'Barlow', sans-serif", fontSize: '12px', fontWeight: 700,
                                     letterSpacing: '0.15em', textTransform: 'uppercase', color: conditionColor,
+                                    boxShadow: `0 0 10px ${conditionColor}33`
                                 }}>
                                     {product.condition}
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                    <div className="stock-dot" style={{ background: isOutOfStock ? '#f87171' : '#00d4b6' }} />
-                                    <span style={{ fontFamily: "'Barlow', sans-serif", fontSize: 11, color: isOutOfStock ? '#f87171' : 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.08em' }}>
-                                        {isOutOfStock ? 'Out of stock' : `${product.stock} in stock`}
+                                <div className="flex items-center gap-2 bg-white/5 px-4 py-1.5 rounded-full border border-white/10">
+                                    <div className={`stock-dot ${isOutOfStock ? 'out-of-stock' : 'in-stock'}`} />
+                                    <span className="font-['Barlow'] text-xs font-semibold tracking-wider text-white/60">
+                                        {isOutOfStock ? 'OUT OF STOCK' : `${product.stock} IN VAULT`}
                                     </span>
                                 </div>
                             </div>
 
-                            <div className="divider" />
+                            <div className="stagger-animate divider" />
 
-                            {/* Description */}
-                            <div style={{ marginBottom: 24 }}>
-                                <div style={{ fontFamily: "'Barlow', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>
-                                    Description
-                                </div>
-                                <p className="desc-text">{product.description}</p>
+                            <div className="stagger-animate mb-6">
+                                <div className="overline-text mb-3 text-white/40">The Details</div>
+                                <p className="font-['Barlow'] text-[15px] leading-relaxed text-white/60 whitespace-pre-wrap">
+                                    {product.description}
+                                </p>
                             </div>
 
-                            <div className="divider" />
+                            <div className="stagger-animate divider" />
 
-                            {/* Meta pills */}
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 28 }}>
-                                <div className="meta-pill">
-                                    <Tag size={13} />
-                                    <span>{product.category?.name}</span>
-                                </div>
-                                {product.brand && (
-                                    <div className="meta-pill">
-                                        <Layers size={13} />
-                                        <span>{product.brand}</span>
-                                    </div>
-                                )}
-                                {product.team && (
-                                    <div className="meta-pill">
-                                        <Users size={13} />
-                                        <span>{product.team}</span>
-                                    </div>
-                                )}
-                                <div className="meta-pill">
-                                    <Package size={13} />
-                                    <span>{product.condition}</span>
-                                </div>
+                            <div className="stagger-animate flex flex-wrap gap-3 mb-10">
+                                <div className="meta-pill"><Tag size={16} /> <span>{product.category?.name}</span></div>
+                                {product.brand && <div className="meta-pill"><Layers size={16} /> <span>{product.brand}</span></div>}
+                                {product.team && <div className="meta-pill"><Users size={16} /> <span>{product.team}</span></div>}
+                                <div className="meta-pill"><Package size={16} /> <span>{product.condition}</span></div>
                             </div>
 
-                            {/* CTA row */}
-                            <div style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
+                            {/* CTA Actions */}
+                            <div className="stagger-animate flex gap-3 mb-4">
                                 <button className="btn-primary" disabled={isOutOfStock}>
-                                    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                                        <ShoppingBag size={16} />
+                                    <span className="flex items-center justify-center gap-3">
+                                        <ShoppingBag size={20} />
                                         {isOutOfStock ? 'Sold Out' : 'Add to Bag'}
                                     </span>
                                 </button>
-                                <button
-                                    className={`btn-icon${wishlist ? ' active' : ''}`}
-                                    onClick={handleWishlist}
-                                    disabled={wishlistLoading}
-                                    aria-label="Wishlist"
-                                    style={{ opacity: wishlistLoading ? 0.6 : 1, transition: 'opacity 0.2s' }}
-                                >
-                                    <Heart
-                                        size={18}
-                                        fill={wishlist ? '#ff3c50' : 'none'}
-                                        style={{ transition: 'fill 0.2s, transform 0.2s', transform: wishlist ? 'scale(1.15)' : 'scale(1)' }}
-                                    />
+                                <button className={`btn-icon ${wishlist ? 'active' : ''}`} onClick={handleWishlist} disabled={wishlistLoading} aria-label="Wishlist">
+                                    <Heart size={22} fill={wishlist ? 'currentColor' : 'none'} className={wishlist ? 'scale-110 transition-transform' : ''} />
                                 </button>
-                                <button
-                                    className="btn-icon"
-                                    onClick={handleShare}
-                                    aria-label="Share"
-                                    title={copied ? 'Copied!' : 'Copy link'}
-                                >
-                                    <Share2 size={16} style={{ color: copied ? ACCENT : undefined }} />
+                                <button className="btn-icon" onClick={handleShare} aria-label="Share">
+                                    <Share2 size={20} style={{ color: copied ? ACCENT : undefined }} />
                                 </button>
                             </div>
 
-                            {/* Notify if OOS */}
                             {isOutOfStock && (
-                                <button className="btn-secondary">Notify When Available</button>
+                                <button className="stagger-animate w-full p-4 mt-2 bg-white/5 border border-white/10 rounded-xl font-['Barlow_Condensed'] text-lg font-black tracking-[0.1em] uppercase text-white/70 hover:bg-white/10 transition-colors">
+                                    Notify When Available
+                                </button>
                             )}
 
-                            {/* Trust strip */}
-                            <div style={{ marginTop: 24, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                                {[
-                                    '✓ Authentic Guaranteed',
-                                    '✓ Secure Checkout',
-                                    '✓ Fast Dispatch',
-                                ].map(t => (
-                                    <span key={t} style={{ fontFamily: "'Barlow', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase' }}>
-                                        {t}
+                            {/* Trust Badges */}
+                            <div className="stagger-animate mt-8 flex gap-6 flex-wrap justify-center sm:justify-start">
+                                {['Authentic Guaranteed', 'Secure Checkout', 'Fast Dispatch'].map(t => (
+                                    <span key={t} className="flex items-center gap-1.5 font-['Barlow'] text-[11px] font-bold tracking-wider text-white/30 uppercase">
+                                        <span className="text-accent">✓</span> {t}
                                     </span>
                                 ))}
                             </div>

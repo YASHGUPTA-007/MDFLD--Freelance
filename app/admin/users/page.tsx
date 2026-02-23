@@ -2,7 +2,7 @@
 
 /**
  * @file app/admin/users/page.tsx
- * @description Admin Users Page
+ * @description Admin Users Page - Compact Professional Version
  *
  * - Table: Avatar, Name, Email, Role, Total Orders, Total Spent, Refund Count, Joined, Actions
  * - Search by name or email
@@ -58,16 +58,16 @@ function ToastNotification({ toast, onClose }: { toast: Toast; onClose: () => vo
 
   return (
     <div style={{
-      position: 'fixed', bottom: 24, right: 24, zIndex: 1000,
+      position: 'fixed', bottom: 20, right: 20, zIndex: 1000,
       background: toast.type === 'success' ? '#1a2e2a' : '#2e1a1a',
       border: `1px solid ${toast.type === 'success' ? ACCENT : '#ff6b6b'}`,
-      borderRadius: 10, padding: '14px 20px',
-      display: 'flex', alignItems: 'center', gap: 10,
-      fontFamily: "'Barlow', sans-serif", fontSize: 13,
+      borderRadius: 8, padding: '12px 18px',
+      display: 'flex', alignItems: 'center', gap: 8,
+      fontFamily: "'Barlow', sans-serif", fontSize: 12,
       color: toast.type === 'success' ? ACCENT : '#ff6b6b',
-      boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+      boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
     }}>
-      {toast.type === 'success' ? <Check size={16} /> : <X size={16} />}
+      {toast.type === 'success' ? <Check size={14} /> : <X size={14} />}
       {toast.message}
     </div>
   );
@@ -100,20 +100,20 @@ function ConfirmationModal({ modal, onClose, onConfirm, submitting }: {
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClose}>
-      <div style={{ background: '#fff', borderRadius: 16, padding: 32, width: '100%', maxWidth: 420, boxShadow: '0 8px 40px rgba(0,0,0,0.12)' }} onClick={e => e.stopPropagation()}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-          <h2 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 22, fontWeight: 800, color: '#1a1a1a' }}>{title}</h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#999' }}><X size={20} /></button>
+      <div style={{ background: '#fff', borderRadius: 12, padding: 24, width: '100%', maxWidth: 400, boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }} onClick={e => e.stopPropagation()}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <h2 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 20, fontWeight: 800, color: '#1a1a1a' }}>{title}</h2>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
         </div>
-        <p style={{ fontFamily: "'Barlow', sans-serif", fontSize: 14, color: '#555', lineHeight: 1.6, marginBottom: 24 }}>
+        <p style={{ fontFamily: "'Barlow', sans-serif", fontSize: 13, color: '#555', lineHeight: 1.5, marginBottom: 20 }}>
           {description}
         </p>
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button onClick={onClose} style={{ background: 'transparent', color: '#666', border: '1px solid #e5e5e5', borderRadius: 8, padding: '11px 20px', fontFamily: "'Barlow', sans-serif", fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+          <button onClick={onClose} style={{ background: 'transparent', color: '#666', border: '1px solid #e5e5e5', borderRadius: 7, padding: '9px 16px', fontFamily: "'Barlow', sans-serif", fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
             Cancel
           </button>
-          <button onClick={onConfirm} disabled={submitting} style={{ background: submitting ? '#ccc' : confirmColor, color: confirmColor === '#ff6b6b' ? '#fff' : '#020606', border: 'none', borderRadius: 8, padding: '11px 20px', fontFamily: "'Barlow', sans-serif", fontSize: 13, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-            {submitting ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <Check size={14} />}
+          <button onClick={onConfirm} disabled={submitting} style={{ background: submitting ? '#ccc' : confirmColor, color: confirmColor === '#ff6b6b' ? '#fff' : '#020606', border: 'none', borderRadius: 7, padding: '9px 16px', fontFamily: "'Barlow', sans-serif", fontSize: 12, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 5 }}>
+            {submitting ? <Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} /> : <Check size={13} />}
             Confirm
           </button>
         </div>
@@ -142,9 +142,9 @@ function ActionsDropdown({ user, onAction }: {
     <button
       onClick={() => { onClick(); setOpen(false); }}
       style={{
-        width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-        padding: '10px 16px', background: 'none', border: 'none',
-        fontFamily: "'Barlow', sans-serif", fontSize: 13, color, cursor: 'pointer',
+        width: '100%', display: 'flex', alignItems: 'center', gap: 8,
+        padding: '8px 14px', background: 'none', border: 'none',
+        fontFamily: "'Barlow', sans-serif", fontSize: 12, color, cursor: 'pointer',
         textAlign: 'left', transition: 'background 0.15s',
       }}
       onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
@@ -159,26 +159,26 @@ function ActionsDropdown({ user, onAction }: {
     <div ref={ref} style={{ position: 'relative' }}>
       <button
         onClick={() => setOpen(o => !o)}
-        style={{ background: 'rgba(0,0,0,0.04)', border: 'none', borderRadius: 7, padding: '7px 10px', cursor: 'pointer', color: '#666', display: 'flex', alignItems: 'center' }}
+        style={{ background: 'rgba(0,0,0,0.04)', border: 'none', borderRadius: 6, padding: '6px 9px', cursor: 'pointer', color: '#666', display: 'flex', alignItems: 'center' }}
       >
-        <MoreVertical size={15} />
+        <MoreVertical size={14} />
       </button>
       {open && (
         <div style={{
           position: 'absolute', right: 0, top: '110%', zIndex: 100,
-          background: '#fff', border: '1px solid #e5e5e5', borderRadius: 10,
-          boxShadow: '0 4px 20px rgba(0,0,0,0.1)', minWidth: 180,
+          background: '#fff', border: '1px solid #e5e5e5', borderRadius: 8,
+          boxShadow: '0 4px 16px rgba(0,0,0,0.1)', minWidth: 170,
           overflow: 'hidden',
         }}>
-          {menuItem(<ShoppingBag size={14} />, 'View Orders', () => onAction('orders', user))}
+          {menuItem(<ShoppingBag size={13} />, 'View Orders', () => onAction('orders', user))}
           {menuItem(
-            <Shield size={14} />,
+            <Shield size={13} />,
             user.role === 'admin' ? 'Demote to User' : 'Promote to Admin',
             () => onAction('role', user),
             '#0066ff'
           )}
           {menuItem(
-            user.isBlocked ? <CheckCircle size={14} /> : <Ban size={14} />,
+            user.isBlocked ? <CheckCircle size={13} /> : <Ban size={13} />,
             user.isBlocked ? 'Unblock User' : 'Block User',
             () => onAction('block', user),
             user.isBlocked ? ACCENT : '#ff6b6b'
@@ -193,10 +193,10 @@ function ActionsDropdown({ user, onAction }: {
 function UserAvatar({ user }: { user: User }) {
   const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   if (user.avatar) {
-    return <img src={user.avatar} alt={user.name} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: '1px solid #f0f0f0' }} />;
+    return <img src={user.avatar} alt={user.name} style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', border: '1px solid #f0f0f0' }} />;
   }
   return (
-    <div style={{ width: 36, height: 36, borderRadius: '50%', background: `linear-gradient(135deg, ${ACCENT}, #00a896)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Barlow Condensed', sans-serif", fontSize: 13, fontWeight: 800, color: '#020606' }}>
+    <div style={{ width: 32, height: 32, borderRadius: '50%', background: `linear-gradient(135deg, ${ACCENT}, #00a896)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, fontWeight: 800, color: '#020606' }}>
       {initials}
     </div>
   );
@@ -301,28 +301,28 @@ export default function UsersPage() {
             `}</style>
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28, flexWrap: 'wrap', gap: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 40, fontWeight: 900, color: '#1a1a1a', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
+          <h1 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 32, fontWeight: 900, color: '#1a1a1a', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
             Users
           </h1>
-          <p style={{ fontFamily: "'Barlow', sans-serif", fontSize: 13, color: '#999', marginTop: 2 }}>
+          <p style={{ fontFamily: "'Barlow', sans-serif", fontSize: 12, color: '#999', marginTop: 2 }}>
             {pagination.total} total
           </p>
         </div>
 
         {/* Search */}
-        <div style={{ position: 'relative', width: 280 }}>
-          <Search size={15} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#aaa', pointerEvents: 'none' }} />
+        <div style={{ position: 'relative', width: 260 }}>
+          <Search size={14} style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', color: '#aaa', pointerEvents: 'none' }} />
           <input
             type="text"
             placeholder="Search by name or email..."
             value={searchInput}
             onChange={e => handleSearchInput(e.target.value)}
             style={{
-              width: '100%', padding: '10px 14px 10px 36px',
-              border: '1px solid #e5e5e5', borderRadius: 8,
-              fontFamily: "'Barlow', sans-serif", fontSize: 13, color: '#1a1a1a',
+              width: '100%', padding: '8px 12px 8px 32px',
+              border: '1px solid #e5e5e5', borderRadius: 7,
+              fontFamily: "'Barlow', sans-serif", fontSize: 12, color: '#1a1a1a',
               outline: 'none', background: '#fafafa',
             }}
           />
@@ -330,13 +330,13 @@ export default function UsersPage() {
       </div>
 
       {/* Table */}
-      <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+      <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
         {loading ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 0', color: ACCENT, gap: 10 }}>
-            <Loader2 size={24} style={{ animation: 'spin 1s linear infinite' }} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '50px 0', color: ACCENT, gap: 8 }}>
+            <Loader2 size={20} style={{ animation: 'spin 1s linear infinite' }} />
           </div>
         ) : users.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: "'Barlow', sans-serif", fontSize: 14, color: '#999' }}>
+          <div style={{ textAlign: 'center', padding: '50px 0', fontFamily: "'Barlow', sans-serif", fontSize: 13, color: '#999' }}>
             {search ? `No users found for "${search}"` : 'No users yet.'}
           </div>
         ) : (
@@ -345,7 +345,7 @@ export default function UsersPage() {
               <thead>
                 <tr style={{ borderBottom: '1px solid #e5e5e5', background: '#fafafa' }}>
                   {['User', 'Email', 'Role', 'Orders', 'Spent', 'Refunds', 'Joined', 'Actions'].map(h => (
-                    <th key={h} style={{ padding: '14px 20px', textAlign: 'left', fontFamily: "'Barlow', sans-serif", fontSize: 11, fontWeight: 700, color: '#999', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                    <th key={h} style={{ padding: '11px 16px', textAlign: 'left', fontFamily: "'Barlow', sans-serif", fontSize: 10, fontWeight: 700, color: '#999', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                       {h}
                     </th>
                   ))}
@@ -355,27 +355,27 @@ export default function UsersPage() {
                 {users.map((user, i) => (
                   <tr key={user._id} className="user-row" style={{ borderBottom: i < users.length - 1 ? '1px solid #f0f0f0' : 'none', transition: 'background 0.15s', opacity: user.isBlocked ? 0.6 : 1 }}>
                     {/* User */}
-                    <td style={{ padding: '14px 20px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <td style={{ padding: '11px 16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                         <UserAvatar user={user} />
                         <div>
-                          <div style={{ fontFamily: "'Barlow', sans-serif", fontSize: 13, fontWeight: 600, color: '#1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <div style={{ fontFamily: "'Barlow', sans-serif", fontSize: 12, fontWeight: 600, color: '#1a1a1a', display: 'flex', alignItems: 'center', gap: 5 }}>
                             {user.name}
                             {user.isBlocked && (
-                              <span style={{ fontSize: 10, background: 'rgba(255,107,107,0.12)', color: '#ff6b6b', padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>BLOCKED</span>
+                              <span style={{ fontSize: 9, background: 'rgba(255,107,107,0.12)', color: '#ff6b6b', padding: '2px 5px', borderRadius: 3, fontWeight: 700 }}>BLOCKED</span>
                             )}
                           </div>
                         </div>
                       </div>
                     </td>
                     {/* Email */}
-                    <td style={{ padding: '14px 20px', fontFamily: "'Barlow', sans-serif", fontSize: 13, color: '#666' }}>
+                    <td style={{ padding: '11px 16px', fontFamily: "'Barlow', sans-serif", fontSize: 12, color: '#666' }}>
                       {user.email}
                     </td>
                     {/* Role */}
-                    <td style={{ padding: '14px 20px' }}>
+                    <td style={{ padding: '11px 16px' }}>
                       <span style={{
-                        padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700,
+                        padding: '3px 9px', borderRadius: 16, fontSize: 10, fontWeight: 700,
                         fontFamily: "'Barlow', sans-serif", letterSpacing: '0.05em',
                         background: user.role === 'admin' ? 'rgba(0,102,255,0.1)' : 'rgba(0,0,0,0.05)',
                         color: (user.role ?? 'user') === 'admin' ? '#0066ff' : '#888',
@@ -385,23 +385,23 @@ export default function UsersPage() {
                       </span>
                     </td>
                     {/* Orders */}
-                    <td style={{ padding: '14px 20px', fontFamily: "'Barlow Condensed', sans-serif", fontSize: 16, fontWeight: 700, color: '#1a1a1a' }}>
+                    <td style={{ padding: '11px 16px', fontFamily: "'Barlow Condensed', sans-serif", fontSize: 15, fontWeight: 700, color: '#1a1a1a' }}>
                       {user.totalOrders}
                     </td>
                     {/* Spent */}
-                    <td style={{ padding: '14px 20px', fontFamily: "'Barlow Condensed', sans-serif", fontSize: 15, fontWeight: 700, color: ACCENT }}>
-                      £{user.totalSpent.toFixed(2)}
+                    <td style={{ padding: '11px 16px', fontFamily: "'Barlow Condensed', sans-serif", fontSize: 14, fontWeight: 700, color: ACCENT }}>
+                      ${user.totalSpent.toFixed(2)}
                     </td>
                     {/* Refunds */}
-                    <td style={{ padding: '14px 20px', fontFamily: "'Barlow', sans-serif", fontSize: 13, fontWeight: 600, color: user.refundCount > 0 ? '#f59e0b' : '#aaa' }}>
+                    <td style={{ padding: '11px 16px', fontFamily: "'Barlow', sans-serif", fontSize: 12, fontWeight: 600, color: user.refundCount > 0 ? '#f59e0b' : '#aaa' }}>
                       {user.refundCount}
                     </td>
                     {/* Joined */}
-                    <td style={{ padding: '14px 20px', fontFamily: "'Barlow', sans-serif", fontSize: 13, color: '#aaa' }}>
+                    <td style={{ padding: '11px 16px', fontFamily: "'Barlow', sans-serif", fontSize: 12, color: '#aaa' }}>
                       {new Date(user.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
                     {/* Actions */}
-                    <td style={{ padding: '14px 20px' }}>
+                    <td style={{ padding: '11px 16px' }}>
                       <ActionsDropdown user={user} onAction={handleAction} />
                     </td>
                   </tr>
@@ -413,17 +413,17 @@ export default function UsersPage() {
 
         {/* Pagination */}
         {!loading && pagination.totalPages > 1 && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderTop: '1px solid #f0f0f0' }}>
-            <span style={{ fontFamily: "'Barlow', sans-serif", fontSize: 12, color: '#999' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderTop: '1px solid #f0f0f0' }}>
+            <span style={{ fontFamily: "'Barlow', sans-serif", fontSize: 11, color: '#999' }}>
               Showing {((pagination.page - 1) * pagination.limit) + 1}–{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
             </span>
-            <div style={{ display: 'flex', gap: 6 }}>
+            <div style={{ display: 'flex', gap: 5 }}>
               <button
                 onClick={() => fetchUsers(pagination.page - 1)}
                 disabled={pagination.page === 1}
-                style={{ background: 'none', border: '1px solid #e5e5e5', borderRadius: 7, padding: '6px 10px', cursor: pagination.page === 1 ? 'not-allowed' : 'pointer', color: pagination.page === 1 ? '#ccc' : '#666', display: 'flex', alignItems: 'center' }}
+                style={{ background: 'none', border: '1px solid #e5e5e5', borderRadius: 6, padding: '5px 8px', cursor: pagination.page === 1 ? 'not-allowed' : 'pointer', color: pagination.page === 1 ? '#ccc' : '#666', display: 'flex', alignItems: 'center' }}
               >
-                <ChevronLeft size={15} />
+                <ChevronLeft size={14} />
               </button>
               {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
                 .filter(p => p === 1 || p === pagination.totalPages || Math.abs(p - pagination.page) <= 1)
@@ -433,12 +433,12 @@ export default function UsersPage() {
                   return acc;
                 }, [])
                 .map((p, idx) => p === '...' ? (
-                  <span key={`dot-${idx}`} style={{ padding: '6px 4px', color: '#ccc', fontFamily: "'Barlow', sans-serif", fontSize: 13 }}>...</span>
+                  <span key={`dot-${idx}`} style={{ padding: '5px 4px', color: '#ccc', fontFamily: "'Barlow', sans-serif", fontSize: 12 }}>...</span>
                 ) : (
                   <button
                     key={p}
                     onClick={() => fetchUsers(p as number)}
-                    style={{ background: pagination.page === p ? ACCENT : 'none', border: `1px solid ${pagination.page === p ? ACCENT : '#e5e5e5'}`, borderRadius: 7, padding: '6px 12px', cursor: 'pointer', fontFamily: "'Barlow', sans-serif", fontSize: 13, fontWeight: 600, color: pagination.page === p ? '#020606' : '#666' }}
+                    style={{ background: pagination.page === p ? ACCENT : 'none', border: `1px solid ${pagination.page === p ? ACCENT : '#e5e5e5'}`, borderRadius: 6, padding: '5px 10px', cursor: 'pointer', fontFamily: "'Barlow', sans-serif", fontSize: 12, fontWeight: 600, color: pagination.page === p ? '#020606' : '#666' }}
                   >
                     {p}
                   </button>
@@ -446,9 +446,9 @@ export default function UsersPage() {
               <button
                 onClick={() => fetchUsers(pagination.page + 1)}
                 disabled={pagination.page === pagination.totalPages}
-                style={{ background: 'none', border: '1px solid #e5e5e5', borderRadius: 7, padding: '6px 10px', cursor: pagination.page === pagination.totalPages ? 'not-allowed' : 'pointer', color: pagination.page === pagination.totalPages ? '#ccc' : '#666', display: 'flex', alignItems: 'center' }}
+                style={{ background: 'none', border: '1px solid #e5e5e5', borderRadius: 6, padding: '5px 8px', cursor: pagination.page === pagination.totalPages ? 'not-allowed' : 'pointer', color: pagination.page === pagination.totalPages ? '#ccc' : '#666', display: 'flex', alignItems: 'center' }}
               >
-                <ChevronRight size={15} />
+                <ChevronRight size={14} />
               </button>
             </div>
           </div>

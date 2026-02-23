@@ -7,7 +7,7 @@ const ACCENT_BORDER = 'rgba(0,212,182,0.15)';
 
 const TRUST_ITEMS = [
   { icon: <ShieldCheck />, title: 'Blockchain Verified', sub: 'Every item authenticated on-chain' },
-  { icon: <Truck />, title: 'Free Global Shipping', sub: 'On all orders over £100' },
+  { icon: <Truck />, title: 'Free Global Shipping', sub: 'On all orders over $100' },
   { icon: <RotateCcw />, title: '30-Day Returns', sub: 'No questions asked policy' },
   { icon: <Zap />, title: 'Same-Day Dispatch', sub: 'Order before 2PM weekdays' },
   { icon: <Headphones />, title: '24/7 Expert Support', sub: 'Real humans, real answers' },
