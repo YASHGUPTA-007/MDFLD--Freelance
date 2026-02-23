@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { ImagePlus, X, Star } from 'lucide-react';
-import ImageSelectionModal from './ImageSelectionModal';
+// import ImageSelectionModal from './ImageSelectionModal';
 import ImageCropModal from './ImageCropModal';
 
 const ACCENT = '#00d4b6';
@@ -22,18 +22,18 @@ interface Props {
 }
 
 interface PreviewItem { src: string; file?: File; }
-interface QueueItem   { file: File; objectUrl: string; }
+interface QueueItem { file: File; objectUrl: string; }
 type ModalStep = 'selection' | 'crop' | null;
 
 export default function ProductImagePicker({ existingUrls = [], onChange, maxImages = MAX_DEFAULT }: Props) {
-    const fileInputRef                 = useRef<HTMLInputElement>(null);
-    const [items, setItems]            = useState<PreviewItem[]>([]);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [items, setItems] = useState<PreviewItem[]>([]);
     const [featuredIndex, setFeatured] = useState(0);
-    const [dragging, setDragging]      = useState(false);
-    const [queue, setQueue]            = useState<QueueItem[]>([]);
-    const [current, setCurrent]        = useState<QueueItem | null>(null);
-    const [modalStep, setModalStep]    = useState<ModalStep>(null);
-    const [mounted, setMounted]        = useState(false);
+    const [dragging, setDragging] = useState(false);
+    const [queue, setQueue] = useState<QueueItem[]>([]);
+    const [current, setCurrent] = useState<QueueItem | null>(null);
+    const [modalStep, setModalStep] = useState<ModalStep>(null);
+    const [mounted, setMounted] = useState(false);
 
     // Always-current ref so async callbacks never close over stale onChange
     const onChangeRef = useRef(onChange);
@@ -45,18 +45,18 @@ export default function ProductImagePicker({ existingUrls = [], onChange, maxIma
     useEffect(() => {
         setItems(existingUrls.map(src => ({ src })));
         setFeatured(0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [existingUrls.join(',')]);
 
     // ── Emit whenever items or featuredIndex change (NOT during render) ────────
     // This useEffect runs after render, so it's safe to call onChange here.
     useEffect(() => {
         onChangeRef.current({
-            files:         items.filter(i => !!i.file).map(i => i.file!),
+            files: items.filter(i => !!i.file).map(i => i.file!),
             featuredIndex: featuredIndex,
-            existingUrls:  items.filter(i => !i.file).map(i => i.src),
+            existingUrls: items.filter(i => !i.file).map(i => i.src),
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items, featuredIndex]);
 
     // Pop next from queue when modal is fully closed
@@ -65,7 +65,7 @@ export default function ProductImagePicker({ existingUrls = [], onChange, maxIma
             const [next, ...rest] = queue;
             setQueue(rest);
             setCurrent(next);
-            setModalStep('selection');
+            setModalStep('crop');
         }
     }, [modalStep, current, queue]);
 
@@ -139,23 +139,23 @@ export default function ProductImagePicker({ existingUrls = [], onChange, maxIma
             const newLen = items.length - 1;
             if (newLen === 0) return 0;
             if (fi >= newLen) return Math.max(0, newLen - 1);
-            if (fi === idx)   return 0;
-            if (fi > idx)     return fi - 1;
+            if (fi === idx) return 0;
+            if (fi > idx) return fi - 1;
             return fi;
         });
     };
 
     const markFeatured = (idx: number) => setFeatured(idx);
 
-    const onDragOver  = (e: React.DragEvent) => { e.preventDefault(); setDragging(true); };
+    const onDragOver = (e: React.DragEvent) => { e.preventDefault(); setDragging(true); };
     const onDragLeave = () => setDragging(false);
-    const onDrop      = (e: React.DragEvent) => { e.preventDefault(); setDragging(false); enqueueFiles(e.dataTransfer.files); };
+    const onDrop = (e: React.DragEvent) => { e.preventDefault(); setDragging(false); enqueueFiles(e.dataTransfer.files); };
 
     const canAdd = items.length + queue.length < maxImages;
 
     const portalContent = mounted && current ? createPortal(
         <>
-            {modalStep === 'selection' && (
+            {/* {modalStep === 'selection' && (
                 <ImageSelectionModal
                     imageFile={current.file}
                     imageUrl={current.objectUrl}
@@ -164,12 +164,13 @@ export default function ProductImagePicker({ existingUrls = [], onChange, maxIma
                     onCancel={handleCancel}
                     type="editor"
                 />
-            )}
+            )} */}
             {modalStep === 'crop' && (
                 <ImageCropModal
                     imageUrl={current.objectUrl}
                     onCropComplete={handleCropComplete}
-                    onCancel={handleCropBack}
+                    onCancel={handleCancel}
+                    defaultAspectRatio={3 / 4}
                 />
             )}
         </>,
